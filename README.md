@@ -8,7 +8,7 @@
 - [アクションの`use:`と、DOMイベントに関数を割り当てとの違い](./action-use-vs-function-to-a-dom-event.md)
 - [$state.raw() vs $state()の違いと使い分け](./raw-state-explained.md)
 - [Svelte のビルトインリアクティブクラスまとめ](./built-in-reactive-classes.md)
-
+- [Svelte/SvelteKit におけるストアの基礎と実践](./about-the-store.md)
 
 
 ## SvelteKit
