@@ -14,8 +14,8 @@
 
 
 ## SvelteKit
-- SvelteKit チートシート（Basic）
-- SvelteKit チートシート（Advanced）
+- [SvelteKit チートシート（Basic）](./sveltekit/basic-sveltekit-cheat-sheet.md)
+- [SvelteKit チートシート（Advanced）](./sveltekit/advanced-sveltekit-cheat-sheet.md)
 
 
 ## テスト
