@@ -18,5 +18,6 @@
 - [SvelteKit チートシート（Advanced）](./sveltekit/advanced-sveltekit-cheat-sheet.md)
 - [SvelteKit Adapter 選定フローチャート](./sveltekit/sveltekit-adapter-selection-flowchart.md)
 - [SvelteKit ファイル構成の役割と実行環境](./sveltekit/sveltekit-files-explanation.md)
+- [Sveltekitとレイヤードアーキテクチャー](./sveltekit/sveltekit-and-layered-architecture.md)
 
 ## テスト
