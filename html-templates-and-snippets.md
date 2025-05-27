@@ -1,66 +1,65 @@
-# HTML `<template>` とコードスニペットの違いと、Svelteらしいテンプレートパターン
+# HTML `<template>` と Svelte `#snippet` の違い
 
-## ✅ 使い分けの比較表
+Svelte 5 では `#snippet` という記法が導入され、HTML の `<template>` に似た使い方もできますが、両者には明確な違いがあります。以下に特徴と違いを整理します。
 
-| 特徴 | HTML `<template>` | コードスニペット（snippet） |
-|---|---|---|
-| 主な用途 | **動的なDOM生成** | **コードの再利用例・共有** |
-| 実行タイミング | JavaScriptから明示的に `cloneNode()` などで使う | コンパイル対象外。表示や教育、開発時のコピペ用途 |
-| DOMへの影響 | 初期状態では描画されない（非表示） | DOMとは無関係（通常はMarkdownやIDEで利用） |
-| パラメータによる変化 | 可（JSで変数展開などに利用） | 不可（固定のコード例） |
-| Svelte内での扱い | `<template>` は基本的に使わない（代替は `{#each}` や `<svelte:fragment>`） | Svelte開発とは直接関係しない（ドキュメント・補助用途） |
+## HTML `<template>` とは？
 
+HTML標準の `<template>` 要素は、**初期状態では描画されないDOM構造**を定義し、JavaScript で複製・挿入して動的に表示する用途に使われます。
 
-## 🔁 Svelteでのテンプレート的再利用パターン
+##### 使用例
 
-### 1. `{#each}` を使った繰り返し
+```html
+<template id="row">
+  <tr><td>テンプレート行</td></tr>
+</template>
 
-```svelte
 <script>
-  const items = [
-    { id: 1, title: 'タイトル1', description: '説明1' },
-    { id: 2, title: 'タイトル2', description: '説明2' }
-  ];
+  const tmpl = document.getElementById('row');
+  const clone = tmpl.content.cloneNode(true);
+  document.querySelector('table').appendChild(clone);
 </script>
-
-{#each items as item (item.id)}
-  <Card title={item.title} description={item.description} />
-{/each}
 ```
 
-### 2. `<slot>` を使ったコンポーネント化
+### 特徴
+- ブラウザネイティブ
+- DOMに表示されない
+- JSから明示的に展開
+- 利用は imperative（命令的）
+
+## Svelte `#snippet` とは？
+
+Svelteの `#snippet` は 再利用可能なコード断片（HTML構造＋動作） を定義し、@render によって明示的に呼び出す コンパイル時のテンプレート展開 機構です。
+
+##### 使用例
 
 ```svelte
-<!-- Card.svelte -->
-<div class="card">
-  <h2><slot name="title" /></h2>
-  <p><slot name="desc" /></p>
-</div>
+{#snippet userCard(name: string)}
+  <div class="card">
+    <p>{name}さん、こんにちは！</p>
+  </div>
+{/snippet}
+
+{@render userCard('太郎')}
 ```
 
-```svelte
-<!-- 使用側 -->
-<Card>
-  <span slot="title">タイトル</span>
-  <span slot="desc">説明テキスト</span>
-</Card>
-```
+### 特徴
+- Svelte専用の記法
+- コンパイル時に展開される
+- 引数による構造変更が可能
+- 宣言的・関数的に再利用可能
 
-### 3. `<svelte:fragment>` を使って柔軟な構造を提供
-
-```svelte
-<!-- Layout.svelte -->
-{#if showHeader}
-  <svelte:fragment slot="header" />
-{/if}
-<main>
-  <slot />
-</main>
-```
+## 🔁 比較表
+|項目|HTML `<template>`|Svelte `#snippet`|
+|---|---|---|
+|実行タイミング|実行時にJSで制御|コンパイル時に展開|
+|再利用方法|cloneNode() で複製|`@render` で呼び出し|
+|バインディング|JSで手動設定|props引数で自動反映|
+|宣言スタイル|imperative（命令的）|declarative（宣言的）|
+|フレームワーク依存性|ブラウザ標準|Svelte 5 特有|
 
 
-## ✅ 結論
+## 💡 結論
+- HTML `<template>` は JS で DOM を手動で操作したい場合に使う。
+- #snippet は Svelte 内で再利用可能なUIパターンを簡潔に構築したい場合に使う。
 
-- HTML `<template>` は、Svelteでは通常使わない。
-- **宣言的にテンプレート的な構造を表現できるのがSvelteの強み。**
-- 再利用可能なUI構造には `{#each}`、コンポーネント、`<slot>`、`<svelte:fragment>` を活用する。
+Svelte では `<template>` よりも #snippet の方が Svelte的なテンプレート再利用として推奨されます。
