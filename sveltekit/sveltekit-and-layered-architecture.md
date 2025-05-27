@@ -926,6 +926,403 @@ export async function GET() {
 }
 ```
 
+## テスト戦略
+
+
+### テスト環境設定
+
+```ts
+// vitest.config.ts
+import { defineConfig } from 'vitest/config';
+import { sveltekit } from '@sveltejs/kit/vite';
+
+export default defineConfig({
+  plugins: [sveltekit()],
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['src/test/setup.ts']
+  }
+});
+```
+
+```ts
+// src/test/setup.ts
+import '@testing-library/jest-dom';
+import { vi } from 'vitest';
+
+// グローバルモック
+global.fetch = vi.fn();
+```
+
+### リポジトリ層のテスト
+```ts
+// src/lib/server/repositories/__tests__/UserRepository.test.ts
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { UserRepository } from '../UserRepository';
+import type { CreateUserRequest } from '../../models/User';
+
+// DBモック
+vi.mock('../../database/connection', () => ({
+  db: {
+    query: vi.fn()
+  }
+}));
+
+import { db } from '../../database/connection';
+
+describe('UserRepository', () => {
+  let userRepository: UserRepository;
+  const mockDb = vi.mocked(db);
+
+  beforeEach(() => {
+    userRepository = new UserRepository();
+    vi.clearAllMocks();
+  });
+
+  describe('findById', () => {
+    it('should return user when found', async () => {
+      // Arrange
+      const userId = 'user-123';
+      const mockUser = {
+        id: userId,
+        name: 'Test User',
+        email: 'test@example.com',
+        password_hash: 'hashed',
+        created_at: new Date(),
+        updated_at: new Date(),
+        is_active: true
+      };
+
+      mockDb.query.mockResolvedValue({ rows: [mockUser] });
+
+      // Act
+      const result = await userRepository.findById(userId);
+
+      // Assert
+      expect(result).toEqual(mockUser);
+      expect(mockDb.query).toHaveBeenCalledWith(
+        'SELECT * FROM users WHERE id = $1 AND is_active = true',
+        [userId]
+      );
+    });
+
+    it('should return null when user not found', async () => {
+      // Arrange
+      mockDb.query.mockResolvedValue({ rows: [] });
+
+      // Act
+      const result = await userRepository.findById('nonexistent');
+
+      // Assert
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('create', () => {
+    it('should create user successfully', async () => {
+      // Arrange
+      const userData: CreateUserRequest & { passwordHash: string } = {
+        email: 'new@example.com',
+        name: 'New User',
+        password: 'password123',
+        passwordHash: 'hashed-password'
+      };
+
+      const mockCreatedUser = {
+        id: 'new-user-id',
+        ...userData,
+        created_at: new Date(),
+        updated_at: new Date(),
+        is_active: true
+      };
+
+      mockDb.query.mockResolvedValue({ rows: [mockCreatedUser] });
+
+      // Act
+      const result = await userRepository.create(userData);
+
+      // Assert
+      expect(result).toEqual(mockCreatedUser);
+      expect(mockDb.query).toHaveBeenCalledWith(
+        expect.stringContaining('INSERT INTO users'),
+        [userData.email, userData.name, userData.passwordHash]
+      );
+    });
+  });
+});
+```
+### サービス層のテスト
+
+```ts
+// src/lib/server/services/__tests__/UserService.test.ts
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { UserService } from '../UserService';
+import { UserRepository } from '../../repositories/UserRepository';
+import { UserValidator } from '../../validators/UserValidator';
+import { AppError } from '../../utils/AppError';
+import type { CreateUserRequest } from '../../models/User';
+
+// 依存関係をモック
+vi.mock('../../repositories/UserRepository');
+vi.mock('../../validators/UserValidator');
+vi.mock('bcryptjs', () => ({
+  hash: vi.fn().mockResolvedValue('hashed-password')
+}));
+
+describe('UserService', () => {
+  let userService: UserService;
+  let mockUserRepository: vi.Mocked<UserRepository>;
+  let mockValidator: vi.Mocked<UserValidator>;
+
+  beforeEach(() => {
+    mockUserRepository = vi.mocked(new UserRepository());
+    mockValidator = vi.mocked(new UserValidator());
+    
+    userService = new UserService();
+    // プライベートプロパティのモック注入
+    (userService as any).userRepository = mockUserRepository;
+    (userService as any).validator = mockValidator;
+  });
+
+  describe('createUser', () => {
+    const validUserData: CreateUserRequest = {
+      email: 'test@example.com',
+      name: 'Test User',
+      password: 'password123'
+    };
+
+    it('should create user successfully', async () => {
+      // Arrange
+      mockValidator.validateCreateUser.mockReturnValue({
+        isValid: true,
+        errors: []
+      });
+      
+      mockUserRepository.findByEmail.mockResolvedValue(null);
+      mockUserRepository.create.mockResolvedValue({
+        id: 'user-123',
+        email: validUserData.email,
+        name: validUserData.name,
+        passwordHash: 'hashed-password',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        isActive: true
+      });
+
+      // Act
+      const result = await userService.createUser(validUserData);
+
+      // Assert
+      expect(result).toBeDefined();
+      expect(result.email).toBe(validUserData.email);
+      expect(mockValidator.validateCreateUser).toHaveBeenCalledWith(validUserData);
+      expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(validUserData.email);
+      expect(mockUserRepository.create).toHaveBeenCalledWith({
+        ...validUserData,
+        passwordHash: 'hashed-password'
+      });
+    });
+
+    it('should throw validation error for invalid data', async () => {
+      // Arrange
+      mockValidator.validateCreateUser.mockReturnValue({
+        isValid: false,
+        errors: ['Invalid email']
+      });
+
+      // Act & Assert
+      await expect(userService.createUser(validUserData))
+        .rejects.toThrow(AppError);
+      
+      expect(mockUserRepository.findByEmail).not.toHaveBeenCalled();
+    });
+
+    it('should throw error when email already exists', async () => {
+      // Arrange
+      mockValidator.validateCreateUser.mockReturnValue({
+        isValid: true,
+        errors: []
+      });
+      
+      mockUserRepository.findByEmail.mockResolvedValue({
+        id: 'existing-user',
+        email: validUserData.email,
+        name: 'Existing User',
+        passwordHash: 'hash',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        isActive: true
+      });
+
+      // Act & Assert
+      await expect(userService.createUser(validUserData))
+        .rejects.toThrow('Email already exists');
+    });
+  });
+});
+```
+### コンポーネントのテスト
+```ts
+// src/lib/components/__tests__/GameRoom.test.ts
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/svelte';
+import GameRoom from '../GameRoom.svelte';
+import type { GameRoom as GameRoomType } from '$lib/server/models/Game';
+
+describe('GameRoom Component', () => {
+  const mockGameRoom: GameRoomType = {
+    id: 'room-123',
+    createdBy: 'user-1',
+    maxPlayers: 4,
+    totalRounds: 3,
+    players: [
+      { id: 'player-1', name: 'Player 1', isReady: false, wins: 0 },
+      { id: 'player-2', name: 'Player 2', isReady: true, wins: 1 }
+    ],
+    currentRound: 1,
+    status: 'waiting',
+    createdAt: new Date(),
+    expiresAt: new Date()
+  };
+
+  it('should display game room information', () => {
+    // Act
+    render(GameRoom, { props: { gameRoom: mockGameRoom } });
+
+    // Assert
+    expect(screen.getByText('ルーム: room-123')).toBeInTheDocument();
+    expect(screen.getByText('参加者: 2/4')).toBeInTheDocument();
+    expect(screen.getByText('Player 1')).toBeInTheDocument();
+    expect(screen.getByText('Player 2')).toBeInTheDocument();
+  });
+
+  it('should show ready status for players', () => {
+    // Act
+    render(GameRoom, { props: { gameRoom: mockGameRoom } });
+
+    // Assert
+    expect(screen.getByText('未準備')).toBeInTheDocument(); // Player 1
+    expect(screen.getByText('準備完了')).toBeInTheDocument(); // Player 2
+  });
+
+  it('should emit ready event when ready button clicked', async () => {
+    // Arrange
+    const { component } = render(GameRoom, { props: { gameRoom: mockGameRoom } });
+    let readyEventFired = false;
+    
+    component.$on('ready', () => {
+      readyEventFired = true;
+    });
+
+    // Act
+    const readyButton = screen.getByRole('button', { name: '準備完了' });
+    await fireEvent.click(readyButton);
+
+    // Assert
+    expect(readyEventFired).toBe(true);
+  });
+});
+```
+### API エンドポイントのテスト
+
+```ts
+// src/routes/api/users/__tests__/+server.test.ts
+import { describe, it, expect, vi } from 'vitest';
+import { GET, POST } from '../+server.js';
+import type { RequestEvent } from '@sveltejs/kit';
+
+// サービスモック
+vi.mock('$lib/server/services/UserService', () => ({
+  UserService: vi.fn().mockImplementation(() => ({
+    getAllUsers: vi.fn(),
+    createUser: vi.fn()
+  }))
+}));
+
+describe('/api/users', () => {
+  describe('GET', () => {
+    it('should return users list', async () => {
+      // Arrange
+      const mockUsers = [
+        { id: '1', name: 'User 1', email: 'user1@example.com' },
+        { id: '2', name: 'User 2', email: 'user2@example.com' }
+      ];
+
+      const mockUserService = {
+        getAllUsers: vi.fn().mockResolvedValue(mockUsers)
+      };
+      
+      vi.mocked(UserService).mockImplementation(() => mockUserService as any);
+
+      const mockEvent = {} as RequestEvent;
+
+      // Act
+      const response = await GET(mockEvent);
+      const data = await response.json();
+
+      // Assert
+      expect(response.status).toBe(200);
+      expect(data).toEqual(mockUsers);
+    });
+  });
+
+  describe('POST', () => {
+    it('should create user successfully', async () => {
+      // Arrange
+      const newUser = { id: '3', name: 'New User', email: 'new@example.com' };
+      const mockUserService = {
+        createUser: vi.fn().mockResolvedValue(newUser)
+      };
+      
+      vi.mocked(UserService).mockImplementation(() => mockUserService as any);
+
+      const mockFormData = new FormData();
+      mockFormData.append('name', 'New User');
+      mockFormData.append('email', 'new@example.com');
+      mockFormData.append('password', 'password123');
+
+      const mockRequest = {
+        formData: vi.fn().mockResolvedValue(mockFormData)
+      };
+
+      const mockEvent = { request: mockRequest } as any;
+
+      // Act
+      const response = await POST(mockEvent);
+      const data = await response.json();
+
+      // Assert
+      expect(response.status).toBe(201);
+      expect(data).toEqual(newUser);
+    });
+  });
+});
+```
+
+### テストスイート実行コマンド
+
+```json
+// package.json:
+{
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "test:watch": "vitest --watch"
+  }
+}
+```
+
+#### 実行コマンド
+```
+npm run test                # 全テスト実行
+npm run test:watch         # ウォッチモード
+npm run test:coverage      # カバレッジレポート
+npm run test UserService   # 特定のテストファイル実行
+```
+
+
 ## 答え：SvelteKitでも完全に従来のアーキテクチャが使えます！
 
 ### ✅ 重要なポイント
