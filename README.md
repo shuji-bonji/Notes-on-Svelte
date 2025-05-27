@@ -17,7 +17,8 @@
 - [SvelteKit チートシート（Basic）](./sveltekit/basic-sveltekit-cheat-sheet.md)
 - [SvelteKit チートシート（Advanced）](./sveltekit/advanced-sveltekit-cheat-sheet.md)
 - [SvelteKit ファイル構成の役割と実行環境](./sveltekit/sveltekit-files-explanation.md)
-- [Sveltekitとレイヤードアーキテクチャー](./sveltekit/sveltekit-and-layered-architecture.md)
+- [SvelteKit におけるレイヤードアーキテクチャ対応のイメージ](./sveltekit/sveltekit-and-layered-architecture-1.md)
+- [Sveltekitとレイヤードアーキテクチャー](./sveltekit/sveltekit-and-layered-architecture-2.md)
 - [SvelteKit Adapter 選定フローチャート](./sveltekit/sveltekit-adapter-selection-flowchart.md)
 
 ## テスト
