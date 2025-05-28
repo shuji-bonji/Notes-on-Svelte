@@ -17,10 +17,12 @@
 - [SvelteKit チートシート（Basic）](./sveltekit/basic-sveltekit-cheat-sheet.md)
 - [SvelteKit チートシート（Advanced）](./sveltekit/advanced-sveltekit-cheat-sheet.md)
 - [SvelteKit ファイル構成の役割と実行環境](./sveltekit/sveltekit-files-explanation.md)
+- [ルーティング規則に基づくファイル](/sveltekit/files-based-on-routing-conventions.md)
 - [SvelteKit におけるレイヤードアーキテクチャ対応のイメージ](./sveltekit/sveltekit-and-layered-architecture-1.md)
 - [Sveltekitとレイヤードアーキテクチャー](./sveltekit/sveltekit-and-layered-architecture-2.md)
 - [SvelteKit Adapter 選定フローチャート](./sveltekit/sveltekit-adapter-selection-flowchart.md)
 - [SPA経験者のためのSvelteKit理解](./sveltekit/spa-vs-sveltekit-architecture.md)
 - [SPA経験者のためのSvelteKit理解(html)](./sveltekit/spa-vs-sveltekit-architecture.html)
+
 
 ## テスト
