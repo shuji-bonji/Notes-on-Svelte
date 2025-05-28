@@ -26,14 +26,14 @@ SvelteKit における「+がつくファイル」（通称：routing convention
 
 
 ##  特別なディレクトリとの併用
-- src/routes/api/hello/+server.ts などで API エンドポイントとして使用
-- src/routes/[slug]/+page.ts のように動的パラメータと併用可
+- `src/routes/api/hello/+server.ts` などで API エンドポイントとして使用
+- `src/routes/[slug]/+page.ts` のように動的パラメータと併用可
 
 ##  開発中に便利な考え方
-- +page.svelte：何を表示するか
-- +page.ts / +page.server.ts：どうデータを用意するか
-- +layout.*：他のページでも共通して使うレイアウトやデータ
-- +server.ts：APIとして振る舞わせるとき
+- `+page.svelte`：何を表示するか
+- `+page.ts` / +page.server.ts：どうデータを用意するか
+- `+layout.*`：他のページでも共通して使うレイアウトやデータ
+- `+server.ts`：APIとして振る舞わせるとき
 
 
 ## ファイル構成の視覚化（構成図 & シーケンス図）
