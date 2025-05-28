@@ -656,6 +656,181 @@ graph TB
     B1 -.-> E4
 ```
 
+## 🔄 シーケンス図：リアルタイムジャンケンゲームの主要フロー
+
+### 1. ゲームルーム作成フロー
+
+```mermaid
+sequenceDiagram
+    participant User as ユーザー
+    participant UI as +page.svelte
+    participant Controller as GameController
+    participant Service as GameService
+    participant Repository as GameRepository
+    participant DB as PostgreSQL
+    participant WS as WebSocket
+
+    User->>UI: 「ルーム作成」ボタン押下
+    UI->>Controller: createRoom(maxPlayers, totalRounds)
+    Controller->>Service: createGame(userId, maxPlayers, totalRounds)
+    Service->>Repository: create(gameData)
+    Repository->>DB: INSERT INTO game_rooms
+    DB-->>Repository: gameRoom record
+    Repository-->>Service: GameRoom
+    Service->>WS: setupGameRoom(roomId)
+    Service-->>Controller: GameRoom
+    Controller-->>UI: { success: true, roomId }
+    UI-->>User: ルーム作成完了、URL表示
+```
+
+### 2. ゲーム参加フロー
+
+```mermaid
+sequenceDiagram
+    participant User2 as 参加者
+    participant UI2 as +page.svelte
+    participant Controller as GameController
+    participant Service as GameService
+    participant Repository as GameRepository
+    participant WS as WebSocket Server
+    participant User1 as ルーム作成者
+
+    User2->>UI2: 招待URLにアクセス
+    UI2->>Controller: joinGame(roomId, playerName)
+    Controller->>Service: joinGameRoom(roomId, playerData)
+    Service->>Repository: findById(roomId)
+    Repository-->>Service: GameRoom
+    Service->>Service: validateJoinConditions()
+    Service->>Repository: addPlayer(roomId, player)
+    Repository-->>Service: Updated GameRoom
+    Service->>WS: broadcastPlayerJoined(roomId, gameRoom)
+    WS-->>User1: プレイヤー参加通知
+    WS-->>User2: 参加成功通知
+    Service-->>Controller: Updated GameRoom
+    Controller-->>UI2: 参加成功、ゲーム状態表示
+```
+
+### 3. ジャンケン実行フロー
+
+```mermaid
+sequenceDiagram
+    participant P1 as Player1 UI
+    participant P2 as Player2 UI
+    participant WS as WebSocket Server
+    participant Service as GameService
+    participant Repository as GameRepository
+
+    Note over P1,P2: 全員が「準備OK」を押下済み
+
+    WS->>P1: startCountdown()
+    WS->>P2: startCountdown()
+    
+    Note over P1,P2: 3...2...1...ポン！
+
+    P1->>WS: submitChoice('rock')
+    P2->>WS: submitChoice('paper')
+    
+    WS->>Service: processRound(roomId, choices)
+    Service->>Service: determineWinner(choices)
+    Service->>Repository: updateGameRound(roomId, results)
+    
+    Service-->>WS: RoundResult
+    WS-->>P1: 結果通知（You Lose!）
+    WS-->>P2: 結果通知（You Win!）
+    
+    alt ゲーム継続
+        WS->>P1: 次ラウンド準備
+        WS->>P2: 次ラウンド準備
+    else ゲーム終了
+        Service->>Repository: finalizeGame(roomId)
+        WS->>P1: 最終結果表示
+        WS->>P2: 最終結果表示
+    end
+```
+
+### 4. 通知サービス連携フロー
+
+```mermaid
+sequenceDiagram
+    participant User as ルーム作成者
+    participant UI as +page.svelte
+    participant Controller as GameController
+    participant NotificationService as NotificationService
+    participant EmailProvider as Email API
+    participant SMSProvider as SMS API
+
+    User->>UI: 招待先入力（メール/SMS）
+    UI->>Controller: sendInvitations(roomId, contacts)
+    Controller->>NotificationService: sendGameInvites(roomId, contacts)
+    
+    par メール送信
+        NotificationService->>EmailProvider: sendEmail(to, subject, body)
+        EmailProvider-->>NotificationService: 送信結果
+    and SMS送信
+        NotificationService->>SMSProvider: sendSMS(to, message)
+        SMSProvider-->>NotificationService: 送信結果
+    end
+    
+    NotificationService-->>Controller: 通知送信結果
+    Controller-->>UI: 送信完了通知
+    UI-->>User: 「招待を送信しました」
+```
+
+### 5. エラーハンドリングフロー
+
+```mermaid
+sequenceDiagram
+    participant UI as +page.svelte
+    participant Controller as GameController
+    participant Service as GameService
+    participant Repository as GameRepository
+    participant DB as PostgreSQL
+
+    UI->>Controller: joinGame(invalidRoomId)
+    Controller->>Service: joinGameRoom(invalidRoomId, playerData)
+    Service->>Repository: findById(invalidRoomId)
+    Repository->>DB: SELECT * FROM game_rooms WHERE id = ?
+    DB-->>Repository: 空の結果
+    Repository-->>Service: null
+    Service->>Service: throw new AppError('Game not found', 404)
+    Service-->>Controller: AppError
+    Controller->>Controller: handleAppError(error)
+    Controller-->>UI: { success: false, error: 'ゲームが見つかりません' }
+    UI->>UI: showErrorMessage()
+    UI-->>User: エラーメッセージ表示
+```
+
+### 6. データ永続化・自動削除フロー
+
+```mermaid
+sequenceDiagram
+    participant Scheduler as Cron Job
+    participant Service as GameService
+    participant Repository as GameRepository
+    participant DB as PostgreSQL
+    participant Storage as File Storage
+
+    Note over Scheduler: 日次実行（毎日午前2時）
+
+    Scheduler->>Service: cleanupExpiredGames()
+    Service->>Repository: findExpiredGames()
+    Repository->>DB: SELECT * FROM game_rooms WHERE expires_at < NOW()
+    DB-->>Repository: expired games list
+    Repository-->>Service: ExpiredGames[]
+    
+    loop 各期限切れゲーム
+        Service->>Repository: softDelete(gameId)
+        Repository->>DB: UPDATE game_rooms SET is_deleted = true
+        Service->>Storage: deleteGameAssets(gameId)
+    end
+    
+    Service->>Repository: hardDeleteOldGames()
+    Repository->>DB: DELETE FROM game_rooms WHERE is_deleted = true AND deleted_at < NOW() - INTERVAL '30 days'
+    
+    Service-->>Scheduler: クリーンアップ完了
+```
+
+
 ## 💡 重要なポイント
 
 ### ✅ `+page.server.ts` の正しい使い方
