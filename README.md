@@ -25,6 +25,7 @@
 - [SvelteKit Adapter 選定フローチャート](./sveltekit/sveltekit-adapter-selection-flowchart.md)
 - [SPA経験者のためのSvelteKit理解](./sveltekit/spa-vs-sveltekit-architecture.md)
 - [SPA経験者のためのSvelteKit理解(html)](./sveltekit/spa-vs-sveltekit-architecture.html)
-
+- [SPA vs SSR: 2025年のWebアーキテクチャトレンド](./sveltekit/spa-vs-ssr-trend-analysis.md)
+- [SPAとSSRの潮流と構成の選択肢](./sveltekit/spa-and-ssr-trends-and-configuration-options.md)
 
 ## テスト
