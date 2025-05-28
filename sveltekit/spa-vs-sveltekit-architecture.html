@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPA経験者のためのSvelteKit理解</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .tab-button.active { 
+            background-color: #3b82f6; 
+            color: white; 
+        }
+        .code-block {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="max-w-6xl mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6 text-center">SPA経験者のためのSvelteKit理解</h1>
+        
+        <div class="mb-6">
+            <div class="flex space-x-2">
+                <button onclick="showTab('spa')" class="tab-button px-4 py-2 rounded-lg font-medium transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300 active" id="tab-spa">
+                    SPA（慣れ親しんだ世界）
+                </button>
+                <button onclick="showTab('sveltekit')" class="tab-button px-4 py-2 rounded-lg font-medium transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300" id="tab-sveltekit">
+                    SvelteKit（新しい世界）
+                </button>
+                <button onclick="showTab('comparison')" class="tab-button px-4 py-2 rounded-lg font-medium transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300" id="tab-comparison">
+                    直接比較
+                </button>
+            </div>
+        </div>
+
+        <!-- SPA View -->
+        <div id="content-spa" class="tab-content active">
+            <div class="bg-blue-50 p-6 rounded-lg">
+                <h2 class="text-2xl font-bold mb-4 text-blue-800">🚀 SPA（あなたの経験）</h2>
+                
+                <div class="space-y-4">
+                    <div class="bg-white p-4 rounded border-l-4 border-blue-500">
+                        <h3 class="font-bold mb-2">アーキテクチャ</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-orange-100 p-3 rounded">
+                                <h4 class="font-semibold">フロントエンド</h4>
+                                <ul class="text-sm mt-2 space-y-1">
+                                    <li>• Angular アプリ</li>
+                                    <li>• ブラウザでのみ実行</li>
+                                    <li>• component.ts + template</li>
+                                    <li>• クライアントサイドルーティング</li>
+                                </ul>
+                            </div>
+                            <div class="bg-green-100 p-3 rounded">
+                                <h4 class="font-semibold">バックエンド</h4>
+                                <ul class="text-sm mt-2 space-y-1">
+                                    <li>• .NET Web API</li>
+                                    <li>• サーバーでのみ実行</li>
+                                    <li>• RESTful API</li>
+                                    <li>• JSON レスポンス</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded border-l-4 border-blue-500">
+                        <h3 class="font-bold mb-2">データフロー</h3>
+                        <div class="text-sm space-y-2">
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs">1</span>
+                                <span>ブラウザで Angular アプリ起動</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs">2</span>
+                                <span>HttpClient で Web API 呼び出し</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs">3</span>
+                                <span>JSON データを受信</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs">4</span>
+                                <span>Angular でデータをレンダリング</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded border-l-4 border-blue-500">
+                        <h3 class="font-bold mb-2">コード例</h3>
+                        <div class="code-block">// Angular Component
+@Component({...})
+export class GameComponent {
+  game$ = this.http.get&lt;Game&gt;('/api/games/123');
+}
+
+// .NET Web API
+[HttpGet("games/{id}")]
+public async Task&lt;Game&gt; GetGame(int id) {
+  return await _gameService.GetGameAsync(id);
+}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SvelteKit View -->
+        <div id="content-sveltekit" class="tab-content">
+            <div class="bg-green-50 p-6 rounded-lg">
+                <h2 class="text-2xl font-bold mb-4 text-green-800">🌐 SvelteKit（新しい世界）</h2>
+                
+                <div class="space-y-4">
+                    <div class="bg-white p-4 rounded border-l-4 border-green-500">
+                        <h3 class="font-bold mb-2">アーキテクチャ</h3>
+                        <div class="bg-yellow-100 p-3 rounded mb-3">
+                            <h4 class="font-semibold">🤯 ここが混乱ポイント！</h4>
+                            <p class="text-sm mt-1">
+                                <strong>フロントエンドとバックエンドが同じプロジェクト内</strong>にある<br/>
+                                でも、実行環境は分かれている
+                            </p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-orange-100 p-3 rounded">
+                                <h4 class="font-semibold">クライアントサイド</h4>
+                                <ul class="text-sm mt-2 space-y-1">
+                                    <li>• +page.svelte（UI）</li>
+                                    <li>• +page.ts（データ取得）</li>
+                                    <li>• ブラウザで実行</li>
+                                </ul>
+                            </div>
+                            <div class="bg-green-100 p-3 rounded">
+                                <h4 class="font-semibold">サーバーサイド</h4>
+                                <ul class="text-sm mt-2 space-y-1">
+                                    <li>• +page.server.ts（サーバー処理）</li>
+                                    <li>• +server.ts（API）</li>
+                                    <li>• Node.js で実行</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded border-l-4 border-green-500">
+                        <h3 class="font-bold mb-2">ファイル構成の意味</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-start space-x-3">
+                                <span class="bg-purple-500 text-white px-2 py-1 rounded text-xs font-mono">+page.svelte</span>
+                                <div>
+                                    <p class="font-semibold">UI コンポーネント</p>
+                                    <p class="text-sm text-gray-600">Angular の component.ts + template と同じ</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs font-mono">+page.ts</span>
+                                <div>
+                                    <p class="font-semibold">ユニバーサルデータ取得</p>
+                                    <p class="text-sm text-gray-600">サーバー・ブラウザ両方で実行される（公開データ）</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <span class="bg-red-500 text-white px-2 py-1 rounded text-xs font-mono">+page.server.ts</span>
+                                <div>
+                                    <p class="font-semibold">サーバー専用処理</p>
+                                    <p class="text-sm text-gray-600">.NET Web API と同じ（秘密データ・DB直接アクセス）</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <span class="bg-green-500 text-white px-2 py-1 rounded text-xs font-mono">+layout.svelte</span>
+                                <div>
+                                    <p class="font-semibold">共通レイアウト</p>
+                                    <p class="text-sm text-gray-600">Angular の app.component.html と同じ</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded border-l-4 border-green-500">
+                        <h3 class="font-bold mb-2">コード例</h3>
+                        <div class="code-block">// +page.server.ts（サーバーで実行）
+export const load = async ({ params }) =&gt; {
+  // DB直接アクセス（.NET Web API と同じ）
+  const game = await db.query('SELECT * FROM games WHERE id = ?', [params.id]);
+  return { game };
+};
+
+// +page.svelte（ブラウザで実行）
+&lt;script&gt;
+  export let data; // load関数からのデータ
+&lt;/script&gt;
+&lt;h1&gt;{data.game.title}&lt;/h1&gt;</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison View -->
+        <div id="content-comparison" class="tab-content">
+            <div class="space-y-6">
+                <div class="bg-purple-50 p-6 rounded-lg">
+                    <h2 class="text-2xl font-bold mb-4 text-purple-800">🔄 直接比較</h2>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-purple-200">
+                                <tr>
+                                    <th class="p-3 text-left">観点</th>
+                                    <th class="p-3 text-left">SPA（あなたの経験）</th>
+                                    <th class="p-3 text-left">SvelteKit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-white">
+                                    <td class="p-3 font-semibold">実行環境</td>
+                                    <td class="p-3">フロント：ブラウザのみ<br/>API：サーバーのみ</td>
+                                    <td class="p-3">混在：サーバー + ブラウザ</td>
+                                </tr>
+                                <tr class="bg-gray-50">
+                                    <td class="p-3 font-semibold">データ取得</td>
+                                    <td class="p-3">HttpClient → JSON API</td>
+                                    <td class="p-3">load 関数 → 直接データ</td>
+                                </tr>
+                                <tr class="bg-white">
+                                    <td class="p-3 font-semibold">ルーティング</td>
+                                    <td class="p-3">Angular Router（設定ファイル）</td>
+                                    <td class="p-3">ファイル構造がそのままルート</td>
+                                </tr>
+                                <tr class="bg-gray-50">
+                                    <td class="p-3 font-semibold">認証</td>
+                                    <td class="p-3">JWT → Angular Guard</td>
+                                    <td class="p-3">セッション → load 関数</td>
+                                </tr>
+                                <tr class="bg-white">
+                                    <td class="p-3 font-semibold">SEO</td>
+                                    <td class="p-3">弱い（CSRのみ）</td>
+                                    <td class="p-3">強い（SSR対応）</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-red-50 p-6 rounded-lg">
+                    <h3 class="text-xl font-bold mb-3 text-red-800">⚠️ SPA開発者が混乱するポイント</h3>
+                    <div class="space-y-3">
+                        <div class="bg-white p-3 rounded border-l-4 border-red-400">
+                            <p class="font-semibold">「なんで同じプロジェクトにサーバーコードが？」</p>
+                            <p class="text-sm text-gray-600 mt-1">
+                                SvelteKitはフルスタックフレームワーク。1つのプロジェクトでフロント+バックエンドを統合管理
+                            </p>
+                        </div>
+                        <div class="bg-white p-3 rounded border-l-4 border-red-400">
+                            <p class="font-semibold">「いつサーバーで実行されるの？」</p>
+                            <p class="text-sm text-gray-600 mt-1">
+                                +page.server.ts は常にサーバー、+page.ts は初回はサーバー・以降はブラウザ
+                            </p>
+                        </div>
+                        <div class="bg-white p-3 rounded border-l-4 border-red-400">
+                            <p class="font-semibold">「APIエンドポイントはどこ？」</p>
+                            <p class="text-sm text-gray-600 mt-1">
+                                +server.ts が API エンドポイント。でも load 関数で直接データを渡すことも多い
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+                button.style.backgroundColor = '#e5e7eb';
+                button.style.color = '#374151';
+            });
+            
+            // Show selected tab content
+            document.getElementById(`content-${tabName}`).classList.add('active');
+            
+            // Activate selected button
+            const activeButton = document.getElementById(`tab-${tabName}`);
+            activeButton.classList.add('active');
+            
+            // Set button colors based on tab
+            if (tabName === 'spa') {
+                activeButton.style.backgroundColor = '#3b82f6';
+                activeButton.style.color = 'white';
+            } else if (tabName === 'sveltekit') {
+                activeButton.style.backgroundColor = '#10b981';
+                activeButton.style.color = 'white';
+            } else if (tabName === 'comparison') {
+                activeButton.style.backgroundColor = '#8b5cf6';
+                activeButton.style.color = 'white';
+            }
+        }
+    </script>
+</body>
+</html>
