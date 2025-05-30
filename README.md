@@ -27,5 +27,6 @@
 - [SPA経験者のためのSvelteKit理解(html)](./sveltekit/spa-vs-sveltekit-architecture.html)
 - [SPA vs SSR: 2025年のWebアーキテクチャトレンド](./sveltekit/spa-vs-ssr-trend-analysis.md)
 - [SPAとSSRの潮流と構成の選択肢](./sveltekit/spa-and-ssr-trends-and-configuration-options.md)
+- [PWA + SSR + SPA ハイブリッド構成](./sveltekit/pwa-ssr-hybrid-analysis.md)
 
 ## テスト
