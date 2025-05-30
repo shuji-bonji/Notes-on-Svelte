@@ -1,6 +1,5 @@
 # Svelte メモ
 
-
 ## Svelte
 - [Svelte チートシート（Basic）](./svelte/basic-svelte-cheat-sheet.md)
 - [Svelte チートシート（Advanced）](./svelte/advanced-svelte-cheat-sheet.md)
@@ -27,6 +26,7 @@
 - [SPA経験者のためのSvelteKit理解(html)](./sveltekit/spa-vs-sveltekit-architecture.html)
 - [SPA vs SSR: 2025年のWebアーキテクチャトレンド](./sveltekit/spa-vs-ssr-trend-analysis.md)
 - [SPAとSSRの潮流と構成の選択肢](./sveltekit/spa-and-ssr-trends-and-configuration-options.md)
+- [PWA + SSR + SPA Web開発の新次元](./sveltekit/pwa+ssr+spa-a-new-dimension-in-web-development.md)
 - [PWA + SSR + SPA ハイブリッド構成](./sveltekit/pwa-ssr-hybrid-analysis.md)
 
 ## テスト
