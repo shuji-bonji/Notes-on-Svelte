@@ -32,5 +32,6 @@
 - [PWA + SSR + SPA ハイブリッド構成](./sveltekit/pwa-ssr-hybrid-analysis.md)
 - [`+page.ts` と `+page.server.ts` における `load()` 関数の違い](/sveltekit/the-load-function-in+page.ts-and+page.server.ts.md)
 - [+page.ts と +page.server.ts の実行タイミングと責任範囲図解](./sveltekit/load-function-sequence-diagrams.md)
+- [SvelteKit でのセッション管理](./sveltekit/session-management-in-sveltekit.md)
 
 ## テスト
