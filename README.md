@@ -15,6 +15,7 @@
 ## SvelteKit
 - [SvelteKit チートシート（Basic）](./sveltekit/basic-sveltekit-cheat-sheet.md)
 - [SvelteKit チートシート（Advanced）](./sveltekit/advanced-sveltekit-cheat-sheet.md)
+- [SvelteKit チュートリアル対応 TypeScript補完チートシート](./sveltekit/typescript-sveltekit-tutorial-cheatsheet.md)
 - [SvelteKit ファイル構成の役割と実行環境](./sveltekit/sveltekit-files-explanation.md)
 - [SvelteKit ルーティング規則に基づくファイル](./sveltekit/files-based-on-routing-conventions.md)
 - [SvelteKit `+server.ts`の使いよう](./sveltekit/how-to-use+server.ts.md)
@@ -28,5 +29,7 @@
 - [SPAとSSRの潮流と構成の選択肢](./sveltekit/spa-and-ssr-trends-and-configuration-options.md)
 - [PWA + SSR + SPA Web開発の新次元](./sveltekit/pwa+ssr+spa-a-new-dimension-in-web-development.md)
 - [PWA + SSR + SPA ハイブリッド構成](./sveltekit/pwa-ssr-hybrid-analysis.md)
+- [`+page.ts` と `+page.server.ts` における `load()` 関数の違い](/sveltekit/the-load-function-in+page.ts-and+page.server.ts.md)
+- [+page.ts と +page.server.ts の実行タイミングと責任範囲図解](./sveltekit/load-function-sequence-diagrams.md)
 
 ## テスト
