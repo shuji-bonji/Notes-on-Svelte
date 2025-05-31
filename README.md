@@ -16,6 +16,7 @@
 - [SvelteKit チートシート（Basic）](./sveltekit/basic-sveltekit-cheat-sheet.md)
 - [SvelteKit チートシート（Advanced）](./sveltekit/advanced-sveltekit-cheat-sheet.md)
 - [SvelteKit チュートリアル対応 TypeScript補完チートシート](./sveltekit/typescript-sveltekit-tutorial-cheatsheet.md)
+- [SvelteKit JavaScript → TypeScript 変換ガイド](./sveltekit/sveltekit-javascript-typescript-conversion-guide.md)
 - [SvelteKit ファイル構成の役割と実行環境](./sveltekit/sveltekit-files-explanation.md)
 - [SvelteKit ルーティング規則に基づくファイル](./sveltekit/files-based-on-routing-conventions.md)
 - [SvelteKit `+server.ts`の使いよう](./sveltekit/how-to-use+server.ts.md)
