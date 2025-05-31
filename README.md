@@ -33,5 +33,6 @@
 - [`+page.ts` と `+page.server.ts` における `load()` 関数の違い](/sveltekit/the-load-function-in+page.ts-and+page.server.ts.md)
 - [+page.ts と +page.server.ts の実行タイミングと責任範囲図解](./sveltekit/load-function-sequence-diagrams.md)
 - [SvelteKit でのセッション管理](./sveltekit/session-management-in-sveltekit.md)
+- [`Cannot find module '$lib/*' or its corresponding type declarations.js(2307)`のメッセージが出たら。](./sveltekit/error-message-2307.md)
 
 ## テスト
