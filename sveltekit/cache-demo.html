@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>304 Not Modified とデータ保持の実験</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .server { background-color: #e8f5e8; border-left: 4px solid #4caf50; }
+        .client { background-color: #e3f2fd; border-left: 4px solid #2196f3; }
+        .cache { background-color: #fff3e0; border-left: 4px solid #ff9800; }
+        button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #005c99; }
+        .highlight { background-color: #ffeb3b; padding: 2px 4px; }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+        .sequence {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        .step-number {
+            background: #007acc;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .arrow { margin: 0 10px; font-size: 18px; color: #666; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        .yes { color: #4caf50; font-weight: bold; }
+        .no { color: #f44336; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 304 Not Modified とデータ保持の実験</h1>
+        
+        <div class="status server">
+            <h3>🌐 サーバーサイドの状態</h3>
+            <p><strong>インメモリMap:</strong> <span id="serverData">空</span></p>
+            <p><strong>プロセス起動時間:</strong> <span id="serverUptime">サーバー未起動</span></p>
+        </div>
+
+        <div class="status client">
+            <h3>🖥️ クライアントサイドの状態</h3>
+            <p><strong>ページ読み込み時間:</strong> <span id="clientLoadTime">未読み込み</span></p>
+            <p><strong>セッションストレージ:</strong> <span id="sessionData">空</span></p>
+        </div>
+
+        <div class="status cache">
+            <h3>📦 キャッシュ状況</h3>
+            <p><strong>最後のリクエスト:</strong> <span id="lastRequest">なし</span></p>
+            <p><strong>HTTPステータス:</strong> <span id="httpStatus">-</span></p>
+        </div>
+
+        <div style="text-align: center; margin: 20px 0;">
+            <button onclick="addTodo()">📝 Todo追加（サーバーに保存）</button>
+            <button onclick="simulateReload()">🔄 リロードシミュレーション</button>
+            <button onclick="clearServerData()">🗑️ サーバーデータクリア</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>📊 実際の動作メカニズム</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>項目</th>
+                    <th>304の対象</th>
+                    <th>リロード後も保持</th>
+                    <th>保存場所</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>HTMLファイル</td>
+                    <td class="yes">✅ 対象</td>
+                    <td class="yes">✅ キャッシュから取得</td>
+                    <td>ブラウザキャッシュ</td>
+                </tr>
+                <tr>
+                    <td>JSバンドル</td>
+                    <td class="yes">✅ 対象</td>
+                    <td class="yes">✅ キャッシュから取得</td>
+                    <td>ブラウザキャッシュ</td>
+                </tr>
+                <tr>
+                    <td><span class="highlight">サーバーのインメモリデータ</span></td>
+                    <td class="no">❌ 対象外</td>
+                    <td class="yes">✅ 保持される</td>
+                    <td>サーバープロセスメモリ</td>
+                </tr>
+                <tr>
+                    <td>クライアントのJavaScript変数</td>
+                    <td class="no">❌ 対象外</td>
+                    <td class="no">❌ 初期化される</td>
+                    <td>ブラウザメモリ</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container">
+        <h2>🔄 リロード時のシーケンス</h2>
+        
+        <div class="sequence">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div>ブラウザ</div>
+                <div class="arrow">→</div>
+                <div>F5キー押下（リロード）</div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div>ブラウザ</div>
+                <div class="arrow">→</div>
+                <div>サーバー: GET /todos（HTMLリクエスト）</div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div>サーバー</div>
+                <div class="arrow">→</div>
+                <div>304 Not Modified（<span class="highlight">HTMLファイルはキャッシュ使用</span>）</div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <div>ブラウザ</div>
+                <div class="arrow">→</div>
+                <div>キャッシュされたHTMLを表示</div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">5</div>
+                <div>ブラウザ</div>
+                <div class="arrow">→</div>
+                <div>サーバー: load関数実行要求</div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">6</div>
+                <div>サーバー</div>
+                <div class="arrow">→</div>
+                <div><span class="highlight">インメモリMapから最新データ取得</span></div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">7</div>
+                <div>ブラウザ</div>
+                <div class="arrow">←</div>
+                <div>最新のTodoデータで画面更新</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>💡 重要な理解ポイント</h2>
+        
+        <div class="status server">
+            <h4>✅ サーバーサイドの真実</h4>
+            <ul>
+                <li><strong>インメモリデータはサーバープロセス内で継続存在</strong></li>
+                <li>リロードはクライアント側の動作で、サーバーには影響しない</li>
+                <li>load関数は毎回実行されるが、サーバーのMapは保持されている</li>
+            </ul>
+        </div>
+
+        <div class="status cache">
+            <h4>📦 304の実際の役割</h4>
+            <ul>
+                <li><strong>静的リソース（HTML、JS、CSS）のキャッシュ制御</strong></li>
+                <li>データのAPIレスポンスとは無関係</li>
+                <li>ネットワーク転送量の削減が目的</li>
+            </ul>
+        </div>
+
+        <div class="status client">
+            <h4>🔄 リロード時の状態変化</h4>
+            <ul>
+                <li><strong>クライアント側のJavaScript変数は初期化</strong></li>
+                <li>サーバーから最新データを再取得</li>
+                <li>結果的に「データが保持されているように見える」</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>🧪 SvelteKitでの実装例</h2>
+        
+        <pre><code>// +page.server.ts
+let todos = new Map(); // ← サーバープロセスのメモリに存在
+
+export const load = async () => {
+  // リロードの度に実行されるが、サーバーのMapは保持
+  console.log('load関数実行 - 現在のTodo数:', todos.size);
+  return {
+    todos: Array.from(todos.values())
+  };
+};
+
+export const actions = {
+  add: async ({ request }) => {
+    const data = await request.formData();
+    const todo = data.get('todo');
+    // サーバーのMapに保存（リロード後も保持）
+    todos.set(Date.now(), { text: todo, done: false });
+  }
+};</code></pre>
+    </div>
+
+    <script>
+        // サーバーデータのシミュレーション
+        let serverTodos = new Map();
+        let serverStartTime = Date.now();
+        let pageLoadTime = Date.now();
+        let requestCount = 0;
+
+        function updateDisplay() {
+            document.getElementById('serverData').textContent = 
+                serverTodos.size > 0 ? `${serverTodos.size}個のTodo` : '空';
+            
+            document.getElementById('serverUptime').textContent = 
+                Math.floor((Date.now() - serverStartTime) / 1000) + '秒前';
+            
+            document.getElementById('clientLoadTime').textContent = 
+                new Date(pageLoadTime).toLocaleTimeString();
+            
+            document.getElementById('sessionData').textContent = 
+                sessionStorage.getItem('todos') || '空';
+        }
+
+        function addTodo() {
+            requestCount++;
+            const todoId = Date.now();
+            const todoText = `Todo ${todoId}`;
+            
+            // サーバーサイドシミュレーション
+            serverTodos.set(todoId, { text: todoText, done: false });
+            
+            // リクエスト情報更新
+            document.getElementById('lastRequest').textContent = 
+                `POST /todos (Todo追加) - ${new Date().toLocaleTimeString()}`;
+            document.getElementById('httpStatus').textContent = '200 OK';
+            
+            updateDisplay();
+            
+            // セッションストレージにも保存（クライアント側の状態として）
+            const todosArray = Array.from(serverTodos.values());
+            sessionStorage.setItem('todos', JSON.stringify(todosArray));
+        }
+
+        function simulateReload() {
+            // クライアント側の状態リセット
+            pageLoadTime = Date.now();
+            
+            // 304 シミュレーション
+            requestCount++;
+            setTimeout(() => {
+                document.getElementById('lastRequest').textContent = 
+                    `GET /todos (リロード) - ${new Date().toLocaleTimeString()}`;
+                document.getElementById('httpStatus').textContent = '304 Not Modified';
+                
+                // load関数の実行をシミュレート
+                console.log('load関数実行 - サーバーのTodo数:', serverTodos.size);
+                
+                updateDisplay();
+                
+                alert(`🔄 リロードシミュレーション完了！
+                
+📦 HTMLファイル: 304 Not Modified (キャッシュ使用)
+🌐 サーバーデータ: ${serverTodos.size}個のTodo保持
+🖥️ クライアント状態: 新しく初期化
+📊 結果: サーバーデータが画面に反映される`);
+            }, 500);
+            
+            // 一時的にリロード中表示
+            document.getElementById('httpStatus').textContent = 'リロード中...';
+        }
+
+        function clearServerData() {
+            serverTodos.clear();
+            sessionStorage.removeItem('todos');
+            updateDisplay();
+            
+            document.getElementById('lastRequest').textContent = 
+                `DELETE /todos (データクリア) - ${new Date().toLocaleTimeString()}`;
+            document.getElementById('httpStatus').textContent = '200 OK';
+        }
+
+        // 初期表示
+        updateDisplay();
+    </script>
+</body>
+</html>

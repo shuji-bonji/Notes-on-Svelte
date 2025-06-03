@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPA→SSR移行の概念転換</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .transition-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .spa-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .ssr-box {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-6">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold text-center mb-8">SPA → SSR 概念転換図</h1>
+        
+        <!-- 比較表 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- SPA側 -->
+            <div class="spa-box text-white p-6 rounded-lg">
+                <h2 class="text-2xl font-bold mb-4">🚀 SPA（あなたの経験）</h2>
+                <div class="space-y-4">
+                    <div class="bg-white bg-opacity-20 p-4 rounded">
+                        <h3 class="font-bold mb-2">データ取得方法</h3>
+                        <code class="text-sm">
+this.http.get('/api/games')<br/>
+.subscribe(games => {...});
+                        </code>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-4 rounded">
+                        <h3 class="font-bold mb-2">フォーム送信</h3>
+                        <code class="text-sm">
+this.http.post('/api/games', data)<br/>
+.subscribe(result => {...});
+                        </code>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-4 rounded">
+                        <h3 class="font-bold mb-2">実行タイミング</h3>
+                        <p class="text-sm">ブラウザでボタンクリック時</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SSR側 -->
+            <div class="ssr-box text-white p-6 rounded-lg">
+                <h2 class="text-2xl font-bold mb-4">🌐 SSR（SvelteKit）</h2>
+                <div class="space-y-4">
+                    <div class="bg-white bg-opacity-20 p-4 rounded">
+                        <h3 class="font-bold mb-2">データ取得方法</h3>
+                        <code class="text-sm">
+export const load = async () => {<br/>
+&nbsp;&nbsp;return { games: await getGames() };<br/>
+};
+                        </code>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-4 rounded">
+                        <h3 class="font-bold mb-2">フォーム送信</h3>
+                        <code class="text-sm">
+export const actions = {<br/>
+&nbsp;&nbsp;default: async ({ request }) => {...}<br/>
+};
+                        </code>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-4 rounded">
+                        <h3 class="font-bold mb-2">実行タイミング</h3>
+                        <p class="text-sm">ページアクセス時（サーバー側）</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- データフロー比較 -->
+        <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+            <h2 class="text-2xl font-bold mb-6 text-center">データフロー比較</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- SPA フロー -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4 text-purple-600">SPA フロー</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <span class="bg-purple-500 text-white px-3 py-1 rounded-full text-sm">1</span>
+                            <span>ブラウザで Angular アプリ起動</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="bg-purple-500 text-white px-3 py-1 rounded-full text-sm">2</span>
+                            <span>ユーザーがボタンクリック</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="bg-purple-500 text-white px-3 py-1 rounded-full text-sm">3</span>
+                            <span>HttpClient で API 呼び出し</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="bg-purple-500 text-white px-3 py-1 rounded-full text-sm">4</span>
+                            <span>JSON データを受信・表示</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SSR フロー -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4 text-blue-600">SSR フロー</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm">1</span>
+                            <span>URL アクセス</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm">2</span>
+                            <span>サーバーで load() 関数実行</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm">3</span>
+                            <span>データ取得済みHTML生成</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm">4</span>
+                            <span>完全なページを即座に表示</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HTTP メソッド対応表 -->
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold mb-6 text-center">HTTP メソッド対応表</h2>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="p-3 text-left">操作</th>
+                            <th class="p-3 text-left">Angular + .NET</th>
+                            <th class="p-3 text-left">SvelteKit</th>
+                            <th class="p-3 text-left">実行タイミング</th>
+                        </tr>
+                    </thead>
+                    <tbody class="space-y-2">
+                        <tr class="bg-green-50">
+                            <td class="p-3 font-semibold">データ取得</td>
+                            <td class="p-3"><code>http.get('/api/games')</code></td>
+                            <td class="p-3"><code>export const load = async () => {}</code></td>
+                            <td class="p-3">ページアクセス時</td>
+                        </tr>
+                        <tr class="bg-blue-50">
+                            <td class="p-3 font-semibold">フォーム送信</td>
+                            <td class="p-3"><code>http.post('/api/games', data)</code></td>
+                            <td class="p-3"><code>export const actions = { default: async ({}) => {} }</code></td>
+                            <td class="p-3">フォーム送信時</td>
+                        </tr>
+                        <tr class="bg-yellow-50">
+                            <td class="p-3 font-semibold">リアルタイム更新</td>
+                            <td class="p-3"><code>http.get() + WebSocket</code></td>
+                            <td class="p-3"><code>+server.ts API + WebSocket</code></td>
+                            <td class="p-3">ユーザー操作時</td>
+                        </tr>
+                        <tr class="bg-purple-50">
+                            <td class="p-3 font-semibold">認証チェック</td>
+                            <td class="p-3"><code>Guard + JWT確認</code></td>
+                            <td class="p-3"><code>+page.server.ts でセッション確認</code></td>
+                            <td class="p-3">ページアクセス時</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
