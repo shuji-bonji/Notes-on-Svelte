@@ -3,6 +3,8 @@
 ## Svelte
 - [Svelte チートシート（Basic）](./svelte/basic-svelte-cheat-sheet.md)
 - [Svelte チートシート（Advanced）](./svelte/advanced-svelte-cheat-sheet.md)
+- [`<script>` と `<script module>` の違い](./svelte/script-module.md)
+- [Rune の使用ガイドライン（Svelte 5）](./svelte/rune-usage-guidelines.md)
 - [$state: リアクティブな状態変数と、バインディングの違い](./svelte/reactive-state-variables-vs-bindings.md)
 - [$derived と $effect の違い](./svelte/derived-vs-effect.md)
 - [アクションの`use:`と、DOMイベントに関数を割り当てとの違い](./svelte/action-use-vs-function-to-a-dom-event.md)
@@ -10,7 +12,6 @@
 - [Svelte のビルトインリアクティブクラスまとめ](./svelte/built-in-reactive-classes.md)
 - [Svelte/SvelteKit におけるストアの基礎と実践](./svelte/about-the-store.md)
 - [HTML `<template>` とコードスニペットの違い、Svelte的なテンプレートパターン](./svelte/html-templates-and-snippets.md)
-
 
 ## SvelteKit
 - [SvelteKit チートシート（Basic）](./sveltekit/basic-sveltekit-cheat-sheet.md)
@@ -36,5 +37,10 @@
 - [`Cannot find module '$lib/*' or its corresponding type declarations.js(2307)`のメッセージが出たら。](./sveltekit/error-message-2307.md)
 - [SvelteKit の use:enhance は、form の送信を interceptしてリクエストに置き換える](./sveltekit/use:enhance.md)
 - [Angular vs Svelte のイベントハンドリング比較](./sveltekit/angular-vs-svelte-event-handling-comparison.md)
+- [SvelteKit の PageOptions 属性比較](./sveltekit/pageoptions.md)
+- [SvelteKit の LinkOptions 属性比較](./sveltekit/linkoptions.md)
+- [SvelteKit `depends()` の完全解説](./sveltekit/depends.md)
+- [`invalidate()`() と `invalidateAll()` の違い](./sveltekit/invalidateAll-and-invalidate.md)
+- [SvelteKit の `$env` モジュール比較と使い分け](./sveltekit/env.md)
 
 ## テスト
