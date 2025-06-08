@@ -9,9 +9,12 @@
 - [$derived と $effect の違い](./svelte/derived-vs-effect.md)
 - [アクションの`use:`と、DOMイベントに関数を割り当てとの違い](./svelte/action-use-vs-function-to-a-dom-event.md)
 - [$state.raw() vs $state()の違いと使い分け](./svelte/raw-state-explained.md)
+- [$props.id() とは](./svelte/props.id.md)
+- [カスタムエレメントと通常のSvelteコンポーネントの違い](./svelte/custom-elements-and-components.md)
 - [Svelte のビルトインリアクティブクラスまとめ](./svelte/built-in-reactive-classes.md)
 - [Svelte/SvelteKit におけるストアの基礎と実践](./svelte/about-the-store.md)
 - [HTML `<template>` とコードスニペットの違い、Svelte的なテンプレートパターン](./svelte/html-templates-and-snippets.md)
+- [Svelte 5 アンチパターン集](./svelte/svelte-anti-patterns.md)
 
 ## SvelteKit
 - [SvelteKit チートシート（Basic）](./sveltekit/basic-sveltekit-cheat-sheet.md)
@@ -42,5 +45,6 @@
 - [SvelteKit `depends()` の完全解説](./sveltekit/depends.md)
 - [`invalidate()`() と `invalidateAll()` の違い](./sveltekit/invalidateAll-and-invalidate.md)
 - [SvelteKit の `$env` モジュール比較と使い分け](./sveltekit/env.md)
+- [SvelteKit アンチパターン集](./sveltekit/sveltekit-anti-patterns.md)
 
 ## テスト
