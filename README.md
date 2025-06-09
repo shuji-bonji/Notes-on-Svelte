@@ -14,6 +14,7 @@
 - [Svelte のビルトインリアクティブクラスまとめ](./svelte/built-in-reactive-classes.md)
 - [Svelte/SvelteKit におけるストアの基礎と実践](./svelte/about-the-store.md)
 - [HTML `<template>` とコードスニペットの違い、Svelte的なテンプレートパターン](./svelte/html-templates-and-snippets.md)
+- [`{@attach}` の使い方と用途](./svelte/attach.md)
 - [Svelte 5 アンチパターン集](./svelte/svelte-anti-patterns.md)
 
 ## SvelteKit
