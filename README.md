@@ -16,6 +16,7 @@
 - [HTML `<template>` とコードスニペットの違い、Svelte的なテンプレートパターン](./svelte/html-templates-and-snippets.md)
 - [`{@attach}` の使い方と用途](./svelte/attach.md)
 - [Svelte 5 アンチパターン集](./svelte/svelte-anti-patterns.md)
+- [Svelte（SvelteKit含む）とTailwind CSS](./svelte/svelte-and-tailwind-css.md)
 
 ## SvelteKit
 - [SvelteKit チートシート（Basic）](./sveltekit/basic-sveltekit-cheat-sheet.md)
@@ -47,5 +48,7 @@
 - [`invalidate()`() と `invalidateAll()` の違い](./sveltekit/invalidateAll-and-invalidate.md)
 - [SvelteKit の `$env` モジュール比較と使い分け](./sveltekit/env.md)
 - [SvelteKit アンチパターン集](./sveltekit/sveltekit-anti-patterns.md)
+- [React と Svelte 5、Next.js と SvelteKit の決定的な違い](./sveltekit/react-and-svelte5-next_js-and-sveltekit.md)
+
 
 ## テスト
