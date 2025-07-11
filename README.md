@@ -1,8 +1,26 @@
-# Svelte メモ
+# Svelte / SvelteKit メモ
+
+## チートシート
+### Svelte
+- [Svelte チートシート（Basic）](./cheatsheet/basic-svelte-cheat-sheet.md)
+- [Svelte チートシート（Advanced）](./cheatsheet/advanced-svelte-cheat-sheet.md)
+
+### SvelteKit
+- [SvelteKit チートシート（Basic）](./cheatsheet/basic-sveltekit-cheat-sheet.md)
+- [SvelteKit チートシート（Advanced）](./cheatsheet/advanced-sveltekit-cheat-sheet.md)
+- [SvelteKit チュートリアル対応 TypeScript補完チートシート](./cheatsheet/typescript-sveltekit-tutorial-cheatsheet.md)
+
+
+## 比較
+- [React と Svelte 5、Next.js と SvelteKit の決定的な違い](./comparison/react-and-svelte5-next_js-and-sveltekit.md)
+- [React / Svelte / Next.js / SvelteKit の背景・沿革・エコシステム比較](./comparison/background.md)
+- [SvelteKit の企業採用実績例 と Next.js / SvelteKit 採用傾向比較](./comparison/recruitment-record.md)
+- [特定業種における Next.js / SvelteKit 採用適性比較](./comparison/recruitment-for-specific-industries.md)
+- [Meta と Vercel の背景・比較](./comparison/supporting-companies.md)
+- [Meta と Vercel の資本関係・投資家・市場戦略比較](./comparison/capital-relationship.md)
+
 
 ## Svelte
-- [Svelte チートシート（Basic）](./svelte/basic-svelte-cheat-sheet.md)
-- [Svelte チートシート（Advanced）](./svelte/advanced-svelte-cheat-sheet.md)
 - [`<script>` と `<script module>` の違い](./svelte/script-module.md)
 - [Rune の使用ガイドライン（Svelte 5）](./svelte/rune-usage-guidelines.md)
 - [$state: リアクティブな状態変数と、バインディングの違い](./svelte/reactive-state-variables-vs-bindings.md)
@@ -16,12 +34,8 @@
 - [HTML `<template>` とコードスニペットの違い、Svelte的なテンプレートパターン](./svelte/html-templates-and-snippets.md)
 - [`{@attach}` の使い方と用途](./svelte/attach.md)
 - [Svelte 5 アンチパターン集](./svelte/svelte-anti-patterns.md)
-- [Svelte（SvelteKit含む）とTailwind CSS](./svelte/svelte-and-tailwind-css.md)
 
 ## SvelteKit
-- [SvelteKit チートシート（Basic）](./sveltekit/basic-sveltekit-cheat-sheet.md)
-- [SvelteKit チートシート（Advanced）](./sveltekit/advanced-sveltekit-cheat-sheet.md)
-- [SvelteKit チュートリアル対応 TypeScript補完チートシート](./sveltekit/typescript-sveltekit-tutorial-cheatsheet.md)
 - [SvelteKit JavaScript → TypeScript 変換ガイド](./sveltekit/sveltekit-javascript-typescript-conversion-guide.md)
 - [SvelteKit ファイル構成の役割と実行環境](./sveltekit/sveltekit-files-explanation.md)
 - [SvelteKit ルーティング規則に基づくファイル](./sveltekit/files-based-on-routing-conventions.md)
@@ -48,7 +62,10 @@
 - [`invalidate()`() と `invalidateAll()` の違い](./sveltekit/invalidateAll-and-invalidate.md)
 - [SvelteKit の `$env` モジュール比較と使い分け](./sveltekit/env.md)
 - [SvelteKit アンチパターン集](./sveltekit/sveltekit-anti-patterns.md)
-- [React と Svelte 5、Next.js と SvelteKit の決定的な違い](./sveltekit/react-and-svelte5-next_js-and-sveltekit.md)
 
 
 ## テスト
+
+## 関係
+- [Svelte（SvelteKit含む）とTailwind CSS](./relationship/svelte-and-tailwind-css.md)
+
