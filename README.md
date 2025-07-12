@@ -68,4 +68,5 @@
 
 ## 関係
 - [Svelte（SvelteKit含む）とTailwind CSS](./relationship/svelte-and-tailwind-css.md)
+- [Web Components と Svelte/Tailwind/UnoCSS における整理と考察](./relationship/web-components-and-svelte-tailwind-unocss.md)
 
