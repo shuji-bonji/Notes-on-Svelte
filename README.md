@@ -18,6 +18,7 @@
 - [特定業種における Next.js / SvelteKit 採用適性比較](./comparison/recruitment-for-specific-industries.md)
 - [Meta と Vercel の背景・比較](./comparison/supporting-companies.md)
 - [Meta と Vercel の資本関係・投資家・市場戦略比較](./comparison/capital-relationship.md)
+- [仮想DOMとShadow DOMはなぜ重いのか？](./comparison/why-virtual-dom-and-shadow-dom-so-heavy.md)
 
 
 ## Svelte
