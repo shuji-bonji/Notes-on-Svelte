@@ -15,14 +15,14 @@ Svelteにおける `use:`（アクション）と、`on:event={functionName}` �
 
 ```svelte
 <script>
-	function autofocus(node) {
-		node.focus(); // DOM操作
-		return {
-			destroy() {
-				console.log('removed');
-			}
-		};
-	}
+  function autofocus(node) {
+    node.focus(); // DOM操作
+    return {
+      destroy() {
+        console.log('removed');
+      }
+    };
+  }
 </script>
 
 <input use:autofocus>
@@ -37,9 +37,9 @@ Svelteにおける `use:`（アクション）と、`on:event={functionName}` �
 #### 🔧 例:
 ```svelte
 <script>
-	function handleClick(event) {
-		console.log('clicked', event.target);
-	}
+  function handleClick(event) {
+    console.log('clicked', event.target);
+  }
 </script>
 
 <button on:click={handleClick}>Click me</button>

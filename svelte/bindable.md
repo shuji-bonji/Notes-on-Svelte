@@ -10,9 +10,9 @@
 
 ```svelte
 <script>
-	import { $bindable } from 'svelte';
+  import { $bindable } from 'svelte';
 
-	let count = $bindable(); // 親からbind:countできるようになる
+  let count = $bindable(); // 親からbind:countできるようになる
 </script>
 
 <p>{count}</p>
@@ -26,7 +26,7 @@
 これは従来の：
 
 <script>
-	export let count;
+  export let count;
 </script>
 ```
 
@@ -41,9 +41,9 @@
 
 ```svelte
 <script>
-	import { $bindable } from 'svelte';
+  import { $bindable } from 'svelte';
 
-	let name = $bindable('名無しの権兵衛');
+  let name = $bindable('名無しの権兵衛');
 </script>
 
 <p>こんにちは、{name}さん！</p>
@@ -54,11 +54,11 @@
 
 ## 📊 まとめ表
 
-機能	$bindable()	$bindable('fallback')
-親から bind: 可能か	✅	✅
-デフォルト値あり	❌	✅（引数に指定した値が使われる）
-子コンポーネント内で再代入可	✅	✅
-再代入時に親にも反映	✅（親が bind: していれば）	✅（親が bind: していれば）
+機能  $bindable()  $bindable('fallback')
+親から bind: 可能か  ✅  ✅
+デフォルト値あり  ❌  ✅（引数に指定した値が使われる）
+子コンポーネント内で再代入可  ✅  ✅
+再代入時に親にも反映  ✅（親が bind: していれば）  ✅（親が bind: していれば）
 
 
 ## 🔁 親子連携の例
@@ -67,7 +67,7 @@
 
 ```svelte
 <script>
-	let username = 'Alice';
+  let username = 'Alice';
 </script>
 
 <Child bind:name={username} />
@@ -78,8 +78,8 @@
 
 ```svelte
 <script>
-	import { $bindable } from 'svelte';
-	let name = $bindable('デフォルト名');
+  import { $bindable } from 'svelte';
+  let name = $bindable('デフォルト名');
 </script>
 
 <input bind:value={name} />

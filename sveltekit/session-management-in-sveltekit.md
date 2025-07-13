@@ -161,9 +161,10 @@ sequenceDiagram
 
 ### 🔸ブラウザ側
 
-トークン	保存場所	特徴
-accessToken	localStorage や memory	使いやすいがXSS耐性は弱い
-refreshToken	Cookie (HttpOnly)	安全にするにはHttpOnlyなCookieが推奨される
+トークン|保存場所|特徴
+---|---|---
+accessToken|localStorage や memory|使いやすいがXSS耐性は弱い
+refreshToken|Cookie (HttpOnly)|安全にするにはHttpOnlyなCookieが推奨される
 
 - fetch()でAPI呼び出し時にAuthorization: Bearer <accessToken>をつける
 - accessTokenが失効していたら、refreshToken（Cookie）を使って再発行

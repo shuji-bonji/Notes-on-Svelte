@@ -6,11 +6,11 @@ $props.id() は、Svelte 5（またはSvelteKit）における runes API での�
 基本構文
 ```svelte
 <script>
-	import { $props } from 'svelte';
+  import { $props } from 'svelte';
 
-	let { id } = $props(); // すべてのpropsをオブジェクトとして取得
-	// または
-	let id = $props.id();  // `id` という特定のpropだけを取得
+  let { id } = $props(); // すべてのpropsをオブジェクトとして取得
+  // または
+  let id = $props.id();  // `id` という特定のpropだけを取得
 </script>
 
 <p>ID: {id}</p>
@@ -18,9 +18,10 @@ $props.id() は、Svelte 5（またはSvelteKit）における runes API での�
 
 ## ✅ 概要
 
-構文	説明
-$props()	コンポーネントに渡された全てのpropsを取得する。返り値はオブジェクト。
-$props.id()	特定のprop id を取得する。通常はリアクティブで再評価される。
+構文|説明
+---|---
+$props()|コンポーネントに渡された全てのpropsを取得する。返り値はオブジェクト。
+$props.id()|特定のprop id を取得する。通常はリアクティブで再評価される。
 
 
 ## 📘 使用例
@@ -30,7 +31,7 @@ $props.id()	特定のprop id を取得する。通常はリアクティブで再
 ```svelte
 <!-- Parent.svelte -->
 <script>
-	let userId = 'abc123';
+  let userId = 'abc123';
 </script>
 
 <Child id={userId} />
@@ -41,9 +42,9 @@ $props.id()	特定のprop id を取得する。通常はリアクティブで再
 ```svelte
 <!-- Child.svelte -->
 <script>
-	import { $props } from 'svelte';
+  import { $props } from 'svelte';
 
-	let id = $props.id();
+  let id = $props.id();
 </script>
 
 <p>ユーザーID: {id}</p>
@@ -56,11 +57,11 @@ $props.id()	特定のprop id を取得する。通常はリアクティブで再
 
 ## 🆚 export let id との違い
 
-比較項目	$props.id()	export let id
-再代入	❌（再代入はできない）	✅（再代入可能）
-取得スタイル	関数呼び出し（id()）	変数として参照（id）
-利用時の意図	propsを 読み取り専用 で扱いたい時	propsを 通常の変数 として使いたい時
-Rune構文対応	✅	❌（従来構文）
+比較項目  $props.id()  export let id
+再代入  ❌（再代入はできない）  ✅（再代入可能）
+取得スタイル  関数呼び出し（id()）  変数として参照（id）
+利用時の意図  propsを 読み取り専用 で扱いたい時  propsを 通常の変数 として使いたい時
+Rune構文対応  ✅  ❌（従来構文）
 
 
 ## 🧠 補足
