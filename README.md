@@ -38,6 +38,7 @@
 - [SvelteKit JavaScript → TypeScript 変換ガイド](./sveltekit/sveltekit-javascript-typescript-conversion-guide.md)
 - [SvelteKit ファイル構成の役割と実行環境](./sveltekit/sveltekit-files-explanation.md)
 - [SvelteKit ルーティング規則に基づくファイル](./sveltekit/files-based-on-routing-conventions.md)
+- [SvelteKitの+layout.svelteにおけるchildrenプロパティ](./sveltekit/layout.svelte-children-property.md)
 - [SvelteKit `+server.ts`の使いよう](./sveltekit/how-to-use+server.ts.md)
    - [ジャンケンゲームでの +server.ts 活用例](./sveltekit/example-of-using-+server.ts-in-a-rock-paper-scissors-game.md)
 - [SvelteKit Adapter 選定フローチャート](./sveltekit/sveltekit-adapter-selection-flowchart.md)
