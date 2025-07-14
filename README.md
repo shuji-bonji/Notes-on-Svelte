@@ -24,6 +24,7 @@
 ## Svelte
 - [`<script>` と `<script module>` の違い](./svelte/script-module.md)
 - [Rune の使用ガイドライン（Svelte 5）](./svelte/rune-usage-guidelines.md)
+- [$stateとProxyオブジェクト](./svelte/state-and-proxy-objects.md)
 - [$state: リアクティブな状態変数と、バインディングの違い](./svelte/reactive-state-variables-vs-bindings.md)
 - [$derived と $effect の違い](./svelte/derived-vs-effect.md)
 - [アクションの`use:`と、DOMイベントに関数を割り当てとの違い](./svelte/action-use-vs-function-to-a-dom-event.md)
