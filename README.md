@@ -33,6 +33,7 @@
 - [カスタムエレメントと通常のSvelteコンポーネントの違い](./svelte/custom-elements-and-components.md)
 - [Svelte のビルトインリアクティブクラスまとめ](./svelte/built-in-reactive-classes.md)
 - [Svelte/SvelteKit におけるストアの基礎と実践](./svelte/about-the-store.md)
+- [@renderディレクティブとSnippetオブジェクト、#snippetディレクティブ](./svelte/render-directive-snippet-object-snippet-directive.md)
 - [HTML `<template>` とコードスニペットの違い、Svelte的なテンプレートパターン](./svelte/html-templates-and-snippets.md)
 - [`{@attach}` の使い方と用途](./svelte/attach.md)
 - [Svelte 5 アンチパターン集](./svelte/svelte-anti-patterns.md)
