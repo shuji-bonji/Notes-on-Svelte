@@ -1,23 +1,22 @@
-# Svelte チートシート（Advanced ）
+# Svelte チートシート（Advanced） - TypeScript版
 
 ## 1. 高度なリアクティビティ
-
 
 ### リアクティブクラス
 
 ```svelte
-<script>
+<script lang="ts">
   class Box {
     width = $state(0);
     height = $state(0);
     area = $derived(this.width * this.height);
-    
+
     embiggen() {
       this.width *= 2;
       this.height *= 2;
     }
   }
-  
+
   let box = new Box();
 </script>
 
@@ -27,18 +26,21 @@
   <p>面積: {box.area}</p>
   <button onclick={() => box.embiggen()}>拡大</button>
 </div>
+
 ```
 
 ### ゲッターとセッター
 
 ```svelte
-<script>
+<script lang="ts">
   let _value = $state(0);
-  
+
   // getterを$derivedで実装
   let value = $derived({
     get: () => _value,
-    set: (v) => { _value = v; }
+    set: (v: number) => {
+      _value = v;
+    }
   });
 </script>
 ```
@@ -46,15 +48,15 @@
 ### リアクティブなビルトイン
 
 ```svelte
-<script>
+<script lang="ts">
   const map = $state(new Map());
   const set = $state(new Set());
-  
+
   // Mapへの追加はリアクティビティをトリガーする
   function addItem() {
     map.set('key' + map.size, 'value');
   }
-  
+
   // Setへの追加もリアクティビティをトリガーする
   function addToSet() {
     set.add(set.size);
@@ -65,30 +67,30 @@
 ### ストア
 
 ```svelte
-<script>
-  import { writable, readable, derived } from 'svelte/store';
-  
+<script lang="ts">
+  import { derived, readable, writable } from 'svelte/store';
+
   // 書き込み可能なストア
   const count = writable(0);
-  
+
   // 読み取り専用ストア
   const time = readable(new Date(), (set) => {
     const interval = setInterval(() => {
       set(new Date());
     }, 1000);
-    
+
     return () => clearInterval(interval);
   });
-  
+
   // 派生ストア
-  const elapsed = derived(time, $time => {
-    return Math.round(($time - start) / 1000);
+  const elapsed = derived(time, ($time) => {
+    return Math.round(($time.getTime() - start.getTime()) / 1000);
   });
-  
+
   let start = new Date();
-  
+
   function increment() {
-    count.update(n => n + 1);
+    count.update((n) => n + 1);
   }
 </script>
 
@@ -105,7 +107,7 @@
 ### スニペットとレンダータグ
 
 ```svelte
-<script>
+<script lang="ts">
   let name = $state('ゲスト');
 </script>
 
@@ -121,8 +123,43 @@
 ### コンポーネントへのスニペット渡し
 
 ```svelte
+<!-- Box.svelte -->
+<script lang="ts">
+  import type { Snippet } from 'svelte';
+  
+  interface Props {
+    header?: Snippet;
+    footer?: Snippet;
+    children: Snippet;
+  }
+  
+  let { header, footer, children }: Props = $props();
+</script>
+
+<div class="box">
+  <div class="header">
+    {#if header}
+      {@render header()}
+    {:else}
+      <h2>デフォルトヘッダー</h2>
+    {/if}
+  </div>
+  
+  <div class="content">
+    {@render children()}
+  </div>
+  
+  {#if footer}
+    <div class="footer">
+      {@render footer()}
+    </div>
+  {/if}
+</div>
+```
+
+```svelte
 <!-- Parent.svelte -->
-<script>
+<script lang="ts">
   import Box from '$lib/components/Child.svelte';
 </script>
 
@@ -139,33 +176,6 @@
 <Box {header} {footer}>
   <p>本文コンテンツ</p>
 </Box>
-```
-
-```svelte
-<!-- Box.svelte -->
-<script>
-  let { header, footer, children } = $props();
-</script>
-
-<div class="box">
-  <div class="header">
-    {#if header}
-      {@render header()}
-    {:else}
-      <h2>デフォルトヘッダー</h2>
-    {/if}
-  </div>
-
-  <div class="content">
-    {@render children()}
-  </div>
-
-  {#if footer}
-    <div class="footer">
-      {@render footer()}
-    </div>
-  {/if}
-</div>
 
 ```
 
@@ -174,47 +184,43 @@
 ### Tweened値
 
 ```svelte
-<script>
-  import { tweened } from 'svelte/motion';
+<script lang="ts">
   import { cubicOut } from 'svelte/easing';
-  
+  import { tweened } from 'svelte/motion';
+
   const progress = tweened(0, {
     duration: 400,
     easing: cubicOut
   });
 </script>
 
-<button 
-  onclick={() => progress.set(1)}
->
-  進行
-</button>
+<button onclick={() => progress.set(1)}> 進行 </button>
 
 <progress value={$progress}></progress>
+
 ```
 
 ### Springs
 
 ```svelte
-<script>
+<script lang="ts">
   import { spring } from 'svelte/motion';
-  
-  const coords = spring({ x: 0, y: 0 }, {
-    stiffness: 0.1,
-    damping: 0.25
-  });
-  
-  function handleMousemove(event) {
+
+  const coords = spring(
+    { x: 0, y: 0 },
+    {
+      stiffness: 0.1,
+      damping: 0.25
+    }
+  );
+
+  function handleMousemove(event: MouseEvent) {
     coords.set({ x: event.clientX, y: event.clientY });
   }
 </script>
 
 <div onmousemove={handleMousemove}>
-  <div 
-    style="position: absolute; left: {$coords.x}px; top: {$coords.y}px;"
-  >
-    ●
-  </div>
+  <div style="position: absolute; left: {$coords.x}px; top: {$coords.y}px;">●</div>
 </div>
 ```
 
@@ -223,7 +229,7 @@
 ### コンテンツ編集可能なバインディング
 
 ```svelte
-<script>
+<script lang="ts">
   let html = $state('<p>編集可能なHTML</p>');
 </script>
 
@@ -234,7 +240,7 @@
 ### eachブロックのバインディング
 
 ```svelte
-<script>
+<script lang="ts">
   let todos = $state([
     { done: false, text: 'Todo 1' },
     { done: false, text: 'Todo 2' },
@@ -248,17 +254,19 @@
     <input bind:value={todo.text} />
   </label>
 {/each}
+
 ```
 
 ### メディア要素のバインディング
 
 ```svelte
-<script>
+<script lang="ts">
   let video;
   let time = 0;
   let duration = 0;
   let paused = true;
   let volume = 1;
+  let kind = 'caption';
 </script>
 
 <video
@@ -268,25 +276,28 @@
   bind:paused
   bind:volume
   src="video.mp4"
-></video>
+>
+  <track kind="captions" src="captions.vtt" srclang="ja" label="日本語のキャプション" default />
+</video>
 
 <div>
-  <button onclick={() => paused = !paused}>
+  <button onclick={() => (paused = !paused)}>
     {paused ? '再生' : '一時停止'}
   </button>
   <input type="range" bind:value={time} max={duration} step="0.01" />
   <input type="range" bind:value={volume} min="0" max="1" step="0.01" />
 </div>
+
 ```
 
 ### コンポーネントインスタンスへのバインディング
 
 ```svelte
-<script>
-  import InputField from './InputField.svelte';
-  
-  let field;
-  
+<script lang="ts">
+  import InputField from '$lib/components/InputField.svelte';
+
+  let field: InputField;
+
   function focusField() {
     field.focus();
   }
@@ -294,17 +305,20 @@
 
 <InputField bind:this={field} />
 <button onclick={focusField}>フォーカス</button>
+```
 
+```svelte
 <!-- InputField.svelte -->
-<script>
+<script lang="ts">
   export function focus() {
     input.focus();
   }
-  
-  let input;
+
+  let input: HTMLInputElement;
 </script>
 
 <input bind:this={input} />
+
 ```
 
 ## 5. 高度なトランジション
@@ -312,10 +326,10 @@
 ### 遅延トランジション
 
 ```svelte
-<script>
-  import { slide } from 'svelte/transition';
+<script lang="ts">
   import { quintOut } from 'svelte/easing';
-  
+  import { slide } from 'svelte/transition';
+
   let visible = $state([true, true, true]);
   let selected = $state(0);
 </script>

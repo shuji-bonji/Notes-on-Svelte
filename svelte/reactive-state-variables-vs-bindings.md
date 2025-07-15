@@ -15,13 +15,13 @@ Svelte 5の`$state`は、新しいリアクティビティモデル（いわゆ�
 #### 例:
 ```svelte
 <script>
-	import { state } from 'svelte';
+  import { state } from 'svelte';
 
-	const count = state(0);
+  const count = state(0);
 </script>
 
 <button on:click={() => $count++}>
-	Clicked {$count} times
+  Clicked {$count} times
 </button>
 ```
 
@@ -40,7 +40,7 @@ Svelte 5の`$state`は、新しいリアクティビティモデル（いわゆ�
 
 ```svelte
 <script>
-	let name = '';
+  let name = '';
 </script>
 
 <input bind:value={name} />

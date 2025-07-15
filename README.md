@@ -1,5 +1,14 @@
 # Svelte / SvelteKit メモ
 
+## チートシート TypeScript版
+
+### Svelte
+- [Svelte チートシート（Basic）- TypeScript版](./cheatsheet/basic-svelte-cheat-sheet-typescript-edition.md)
+- [Svelte チートシート（Advanced） - TypeScript版](./cheatsheet/advanced-svelte-cheat-sheet-typescript-edition.md)
+
+### SvelteKit
+- [SvelteKit チュートリアル対応 TypeScript補完チートシート](./cheatsheet/typescript-sveltekit-tutorial-cheatsheet.md)
+
 ## チートシート
 ### Svelte
 - [Svelte チートシート（Basic）](./cheatsheet/basic-svelte-cheat-sheet.md)
@@ -8,7 +17,7 @@
 ### SvelteKit
 - [SvelteKit チートシート（Basic）](./cheatsheet/basic-sveltekit-cheat-sheet.md)
 - [SvelteKit チートシート（Advanced）](./cheatsheet/advanced-sveltekit-cheat-sheet.md)
-- [SvelteKit チュートリアル対応 TypeScript補完チートシート](./cheatsheet/typescript-sveltekit-tutorial-cheatsheet.md)
+
 
 ## アンチパターン集
 

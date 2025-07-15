@@ -20,9 +20,9 @@ SvelteKit では、`+page.ts` と `+page.server.ts` にそれぞれ `load()` 関
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ fetch }) => {
-	const res = await fetch('/api/public-data');
-	const data = await res.json();
-	return { data };
+  const res = await fetch('/api/public-data');
+  const data = await res.json();
+  return { data };
 };
 ```
 
@@ -36,8 +36,8 @@ export const load: PageLoad = async ({ fetch }) => {
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
-	const user = await locals.db.getUser(params.id);
-	return { user };
+  const user = await locals.db.getUser(params.id);
+  return { user };
 };
 ```
 
@@ -50,7 +50,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 ```ts
 // +page.ts
 export const load: PageLoad = async ({ data }) => {
-	return { user: data.user };
+  return { user: data.user };
 };
 ```
 
