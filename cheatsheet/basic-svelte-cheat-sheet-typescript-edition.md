@@ -383,50 +383,84 @@ Svelteファイル（.svelte）は以下の3つのセクションで構成され
 ```
 
 ## 9. アクション
+useアクションは、要素がDOMにマウント（追加）されたときに実行されます。
 
 ```svelte
 <script lang="ts">
-  // クリック時に要素内のテキストを選択するアクション
-  function selectOnUse(node: HTMLElement) {
-    const handleClick = () => {
-      const selection = window.getSelection();
-      const range = document.createRange();
-      range.selectNodeContents(node);
-      selection?.removeAllRanges();
-      selection?.addRange(range);
-    };
-
-    node.addEventListener('click', handleClick);
-
+  // 入力欄が表示されたら自動的にフォーカスする
+  function autofocus(node: HTMLInputElement) {
+    // マウント時に即座にフォーカス
+    node.focus();
+    
     return {
       destroy() {
-        node.removeEventListener('click', handleClick);
+        // 特に処理なし
       }
     };
   }
+  
+  let showInput = $state(false);
 </script>
 
-<p use:selectOnUse>クリックして選択</p>
+<button onclick={() => showInput = !showInput}>
+  入力欄を表示
+</button>
+
+{#if showInput}
+  <input 
+    use:autofocus
+    type="text" 
+    placeholder="自動的にフォーカスされます"
+  />
+{/if}
 ```
 
 ```svelte
 <script lang="ts">
-  import tippy from 'tippy.js';
-
-  let content = $state('Hello!');
-
-  function tooltip(node: HTMLElement, fn: Function) {
-    $effect(() => {
-      const tooltip = tippy(node, fn());
-
-      return tooltip.destroy;
-    });
+  interface ActionOptions {
+    duration: number;
+    callback?: () => void;
   }
+  
+  function complexAction(node: HTMLElement, options: ActionOptions) {
+    console.log('1. マウント時 - アクション開始');
+    
+    // 初期設定
+    const originalText = node.textContent;
+    node.style.transition = `opacity ${options.duration}ms`;
+    
+    // イベントリスナーの設定
+    const handleClick = () => {
+      console.log('要素がクリックされました');
+      options.callback?.();
+    };
+    
+    node.addEventListener('click', handleClick);
+    
+    return {
+      // パラメータが更新されたとき
+      update(newOptions: ActionOptions) {
+        console.log('2. 更新時 - パラメータが変更されました');
+        node.style.transition = `opacity ${newOptions.duration}ms`;
+      },
+      
+      // 要素がDOMから削除されるとき
+      destroy() {
+        console.log('3. アンマウント時 - クリーンアップ');
+        node.removeEventListener('click', handleClick);
+        node.textContent = originalText;
+      }
+    };
+  }
+  
+  let duration = $state(300);
 </script>
 
-<input bind:value={content} />
+<div use:complexAction={{ duration, callback: () => console.log('コールバック実行') }}>
+  クリックしてみてください
+</div>
 
-<button use:tooltip={() => ({ content })}> Hover me </button>
+<input type="range" bind:value={duration} min="100" max="1000" />
 ```
 
 ## 10. トランジション

@@ -35,6 +35,7 @@
 - [$state: リアクティブな状態変数と、バインディングの違い](./svelte/reactive-state-variables-vs-bindings.md)
 - [$state.raw() vs $state()の違いと使い分け](./svelte/raw-state-explained.md)
 - [$derived と $effect の違い](./svelte/derived-vs-effect.md)
+- [`use`アクションの実行タイミング](./svelte/when-the-use-action-is-executed.md)
 - [アクションの`use:`と、DOMイベントに関数を割り当てとの違い](./svelte/action-use-vs-function-to-a-dom-event.md)
 - [$props.id() とは](./svelte/props.id.md)
 - [カスタムエレメントと通常のSvelteコンポーネントの違い](./svelte/custom-elements-and-components.md)
