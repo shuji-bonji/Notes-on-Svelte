@@ -366,25 +366,25 @@
 ### アニメーション
 
 ```svelte
-<script>
-  import { flip } from 'svelte/animate';
-  import { quintOut } from 'svelte/easing';
-  
-  let list = $state([1, 2, 3, 4, 5]);
-  
-  function shuffle() {
-    list = list.sort(() => Math.random() - 0.5);
-  }
+<script lang="ts">
+	import { flip } from 'svelte/animate';
+	import { quintOut } from 'svelte/easing';
+
+	let list = $state([1, 2, 3, 4, 5]);
+
+	function shuffle() {
+		list = list.sort(() => Math.random() - 0.5);
+	}
 </script>
 
 <button onclick={shuffle}>シャッフル</button>
 
 <div>
-  {#each list as item (item)}
-    <div animate:flip={{ duration: 300, easing: quintOut }}>
-      {item}
-    </div>
-  {/each}
+	{#each list as item (item)}
+		<div animate:flip={{ duration: 300, easing: quintOut }}>
+			{item}
+		</div>
+	{/each}
 </div>
 ```
 
@@ -392,48 +392,50 @@
 
 ```svelte
 <!-- App.svelte -->
-<script>
-  import { setContext } from 'svelte';
-  import Child from './Child.svelte';
-  
-  const theme = $state('light');
-  
-  // コンテキストの設定
-  setContext('theme', {
-    getTheme: () => theme,
-    toggleTheme: () => {
-      theme = theme === 'light' ? 'dark' : 'light';
-    }
-  });
+<script lang="ts">
+	import Child from '$lib/components/Child.svelte';
+	import { setContext } from 'svelte';
+	import { writable } from 'svelte/store';
+
+	const theme = writable<'light' | 'dark'>('light');
+
+	setContext('theme', theme);
 </script>
 
 <Child />
+```
 
+```svelte
 <!-- Child.svelte -->
-<script>
-  import { getContext } from 'svelte';
-  import GrandChild from './GrandChild.svelte';
-  
-  // コンテキストの取得
-  const { getTheme, toggleTheme } = getContext('theme');
+<script lang="ts">
+	import { getContext } from 'svelte';
+	import type { Writable } from 'svelte/store';
+	import GrandChild from './GrandChild.svelte';
+
+	const theme = getContext<Writable<'light' | 'dark'>>('theme');
 </script>
 
-<div class={getTheme()}>
-  <p>現在のテーマ: {getTheme()}</p>
-  <button onclick={toggleTheme}>テーマ切り替え</button>
-  
-  <GrandChild />
+<div class={$theme}>
+	<p>現在のテーマ: {$theme}</p>
+	<button onclick={() => theme.update((t) => (t === 'light' ? 'dark' : 'light'))}>
+		テーマ切り替え
+	</button>
+
+	<GrandChild />
 </div>
 
+```
+
+```svelte
 <!-- GrandChild.svelte -->
-<script>
+<script lang="ts">
   import { getContext } from 'svelte';
-  
-  // 親と同じコンテキストにアクセス可能
-  const { getTheme } = getContext('theme');
+  import type { Writable } from 'svelte/store';
+
+  const theme = getContext<Writable<'light' | 'dark'>>('theme');
 </script>
 
-<p>孫コンポーネントのテーマ: {getTheme()}</p>
+<p>孫コンポーネントのテーマ: {$theme}</p>
 ```
 
 ## 7. 特殊要素
@@ -441,17 +443,17 @@
 ### svelte:window
 
 ```svelte
-<script>
-  let scrollY = $state(0);
-  let innerWidth = $state(0);
-  let online = $state(navigator.onLine);
+<script lang="ts">
+	let scrollY = $state(0);
+	let innerWidth = $state(0);
+	let online = $state(navigator.onLine);
 </script>
 
 <svelte:window
-  bind:scrollY
-  bind:innerWidth
-  online={online}
-  onoffline={() => (online = false)}
+	bind:scrollY
+	bind:innerWidth
+	ononline={() => (online = true)}
+	onoffline={() => (online = false)}
 />
 
 <p>スクロール位置: {scrollY}px</p>
@@ -462,120 +464,80 @@
 ### svelte:document
 
 ```svelte
-<script>
-  let fullscreen = $state(false);
-  
-  function handleFullscreenChange() {
-    fullscreen = !!document.fullscreenElement;
-  }
+<script lang="ts">
+	let fullscreen = $state(false);
+
+	function handleFullscreenChange() {
+		fullscreen = !!document.fullscreenElement;
+	}
 </script>
 
-<svelte:document
-  onfullscreenchange={handleFullscreenChange}
-/>
+<svelte:document onfullscreenchange={handleFullscreenChange} />
 
-<button
-  onclick={() => document.documentElement.requestFullscreen()}
->
-  フルスクリーン
-</button>
+<button onclick={() => document.documentElement.requestFullscreen()}> フルスクリーン </button>
 
 {#if fullscreen}
-  <p>フルスクリーンモード</p>
+	<p>フルスクリーンモード</p>
 {/if}
 ```
 
 ### svelte:head
 
 ```svelte
-<script>
-  export let title = $props('タイトル');
-  export let description = $props('説明');
+<script lang="ts">
+	const { title, description } = $props();
 </script>
 
 <svelte:head>
-  <title>{title}</title>
-  <meta name="description" content={description} />
-  <meta property="og:title" content={title} />
-  <meta property="og:description" content={description} />
+	<title>{title}</title>
+	<meta name="description" content={description} />
+	<meta property="og:title" content={title} />
+	<meta property="og:description" content={description} />
 </svelte:head>
+
 ```
 
 ### svelte:element
 
 ```svelte
-<script>
-  let tagName = $state('div');
-  
-  const options = ['div', 'h1', 'h2', 'p', 'span', 'button'];
+<script lang="ts">
+	let tagName = $state('div');
+
+	const options = ['div', 'h1', 'h2', 'p', 'span', 'button'];
 </script>
 
 <select bind:value={tagName}>
-  {#each options as option}
-    <option value={option}>{option}</option>
-  {/each}
+	{#each options as option}
+		<option value={option}>{option}</option>
+	{/each}
 </select>
 
 <svelte:element this={tagName}>
-  これは {tagName} 要素です
+	これは {tagName} 要素です
 </svelte:element>
 ```
 
 ### svelte:boundary
 
 ```svelte
-<script>
-  let showError = $state(false);
+<script lang="ts">
+	function explode() {
+		throw new Error('💣️');
+	}
+	let count = $state(0);
 </script>
 
-<button onclick={() => showError = true}>
-  エラー発生
-</button>
-
-<svelte:boundary fallback={(error) => `エラー: ${error.message}`}>
-  {#if showError}
-    {nonExistentVariable}
-  {/if}
+<svelte:boundary>
+	{count > 4 ? explode() : null}
+	<button onclick={() => count++}>
+		{count}
+	</button>
+	{#snippet failed(error: unknown, reset: () => void)}
+		<p>Error: {error instanceof Error ? error.message : String(error)}</p>
+		<button onclick={reset}>Reset</button>
+	{/snippet}
 </svelte:boundary>
-```
 
-## 8. スクリプトモジュール
-
-```svelte
-<script context="module">
-  // コンポーネントインスタンス間で共有される
-
-  // モジュールレベルの変数
-  const sharedData = [];
-  
-  // ヘルパー関数
-  export function addSharedData(item) {
-    sharedData.push(item);
-    return sharedData;
-  }
-  
-  // モジュールコンテキストのみでアクセス可能な変数
-  let privateCounter = 0;
-</script>
-
-<script>
-  // コンポーネントの通常のスクリプト
-  // モジュールスクリプトで定義された変数にアクセス可能
-  let localData = $state([...sharedData]);
-  
-  function addLocalItem(item) {
-    localData.push(item);
-    addSharedData(item);
-    privateCounter++;
-  }
-</script>
-
-<button onclick={() => addLocalItem('新しいアイテム')}>
-  アイテム追加
-</button>
-
-<p>ローカルデータ: {localData.join(', ')}</p>
-<p>共有データ: {sharedData.join(', ')}</p>
 ```
 
 

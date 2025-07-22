@@ -3,20 +3,20 @@
 ## チートシート TypeScript版
 
 ### Svelte
-- [Svelte チートシート（Basic）- TypeScript版](./cheatsheet/basic-svelte-cheat-sheet-typescript-edition.md)
-- [Svelte チートシート（Advanced） - TypeScript版](./cheatsheet/advanced-svelte-cheat-sheet-typescript-edition.md)
+- [Svelte チートシート（Basic）- TypeScript版](./cheatsheet/typescript/basic-svelte-cheat-sheet-typescript-edition.md)
+- [Svelte チートシート（Advanced） - TypeScript版](./cheatsheet/typescript/advanced-svelte-cheat-sheet-typescript-edition.md)
 
 ### SvelteKit
-- [SvelteKit チュートリアル対応 TypeScript補完チートシート](./cheatsheet/typescript-sveltekit-tutorial-cheatsheet.md)
+- [SvelteKit チュートリアル対応 TypeScript補完チートシート](./cheatsheet/typescript/typescript-sveltekit-tutorial-cheatsheet.md)
 
 ## チートシート
 ### Svelte
-- [Svelte チートシート（Basic）](./cheatsheet/basic-svelte-cheat-sheet.md)
-- [Svelte チートシート（Advanced）](./cheatsheet/advanced-svelte-cheat-sheet.md)
+- [Svelte チートシート（Basic）](./cheatsheet/javascript/basic-svelte-cheat-sheet.md)
+- [Svelte チートシート（Advanced）](./cheatsheet/javascript/advanced-svelte-cheat-sheet.md)
 
 ### SvelteKit
-- [SvelteKit チートシート（Basic）](./cheatsheet/basic-sveltekit-cheat-sheet.md)
-- [SvelteKit チートシート（Advanced）](./cheatsheet/advanced-sveltekit-cheat-sheet.md)
+- [SvelteKit チートシート（Basic）](./cheatsheet/javascript/basic-sveltekit-cheat-sheet.md)
+- [SvelteKit チートシート（Advanced）](./cheatsheet/javascript/advanced-sveltekit-cheat-sheet.md)
 
 
 ## アンチパターン集
@@ -25,7 +25,6 @@
 - [Svelte 5 アンチパターン集](./svelte/svelte-anti-patterns.md)
 ### SvelteKit
 - [SvelteKit アンチパターン集](./sveltekit/sveltekit-anti-patterns.md)
-
 
 
 ## Svelte
@@ -94,3 +93,6 @@
 - [Svelte（SvelteKit含む）とTailwind CSS](./relationship/svelte-and-tailwind-css.md)
 - [Web Components と Svelte/Tailwind/UnoCSS における整理と考察](./relationship/web-components-and-svelte-tailwind-unocss.md)
 
+
+## AI
+- [Svelte5/SvelteKit TypeScript開発ガイドライン](./ai/claude-md-svelte5.md)

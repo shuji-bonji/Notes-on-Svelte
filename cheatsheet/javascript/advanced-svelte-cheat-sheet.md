@@ -475,15 +475,14 @@
 
 ```svelte
 <script>
-  export let title = $props('タイトル');
-  export let description = $props('説明');
+	const { title, description } = $props();
 </script>
 
 <svelte:head>
-  <title>{title}</title>
-  <meta name="description" content={description} />
-  <meta property="og:title" content={title} />
-  <meta property="og:description" content={description} />
+	<title>{title}</title>
+	<meta name="description" content={description} />
+	<meta property="og:title" content={title} />
+	<meta property="og:description" content={description} />
 </svelte:head>
 ```
 
@@ -508,62 +507,27 @@
 ```
 
 ### svelte:boundary
-
 ```svelte
 <script>
-  let showError = $state(false);
+	function explode() {
+		throw new Error('💣️');
+	}
+	let count = 0;
 </script>
 
-<button onclick={() => showError = true}>
-  エラー発生
-</button>
-
-<svelte:boundary fallback={(error) => `エラー: ${error.message}`}>
-  {#if showError}
-    {nonExistentVariable}
-  {/if}
+<svelte:boundary>
+	{#if count > 4}
+		{@throw new Error('💣️')}
+	{/if}
+	<button on:click={() => count++}>
+		{count}
+	</button>
+	{:catch error, reset}
+		<p>Error: {error.message}</p>
+		<button on:click={reset}>Reset</button>
+	{/catch}
 </svelte:boundary>
 ```
-
-## 8. スクリプトモジュール
-
-```svelte
-<script context="module">
-  // コンポーネントインスタンス間で共有される
-
-  // モジュールレベルの変数
-  const sharedData = [];
-  
-  // ヘルパー関数
-  export function addSharedData(item) {
-    sharedData.push(item);
-    return sharedData;
-  }
-  
-  // モジュールコンテキストのみでアクセス可能な変数
-  let privateCounter = 0;
-</script>
-
-<script>
-  // コンポーネントの通常のスクリプト
-  // モジュールスクリプトで定義された変数にアクセス可能
-  let localData = $state([...sharedData]);
-  
-  function addLocalItem(item) {
-    localData.push(item);
-    addSharedData(item);
-    privateCounter++;
-  }
-</script>
-
-<button onclick={() => addLocalItem('新しいアイテム')}>
-  アイテム追加
-</button>
-
-<p>ローカルデータ: {localData.join(', ')}</p>
-<p>共有データ: {sharedData.join(', ')}</p>
-```
-
 
 
 ## 生のステート (Raw State)
