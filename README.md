@@ -59,6 +59,7 @@
 - [SvelteKit のセッション管理](./sveltekit/session-management-in-sveltekit.md)
 - [SvelteKit のセッション管理（サーバーサイドセッション）](./sveltekit/sveltekit-session-management-jwt-cookie.md)
 - [SvelteKit のセッション管理（JWT）](./sveltekit/sveltekit-session-management-jwt.md)
+- [SvelteKit におけるセッション管理まとめ](./sveltekit/summary-of-session-management-in-sveltekit.md)
 - [`Cannot find module '$lib/*' or its corresponding type declarations.js(2307)`のメッセージが出たら。](./sveltekit/error-message-2307.md)
 - [SvelteKit の use:enhance は、form の送信を interceptしてリクエストに置き換える](./sveltekit/use:enhance.md)
 - [SvelteKit の PageOptions 属性比較](./sveltekit/pageoptions.md)
@@ -101,3 +102,4 @@
 
 ## AI
 - [Svelte5/SvelteKit TypeScript開発ガイドライン](./ai/claude-md-svelte5.md)
+
