@@ -55,6 +55,7 @@
 - [SvelteKit Adapter 選定フローチャート](./sveltekit/sveltekit-adapter-selection-flowchart.md)
 - [`+page.ts` と `+page.server.ts` における `load()` 関数の違い](/sveltekit/the-load-function-in+page.ts-and+page.server.ts.md)
 - [+page.ts と +page.server.ts の実行タイミングと責任範囲図解](./sveltekit/load-function-sequence-diagrams.md)
+- [ルートグループ (auth)/ の仕組み](./sveltekit/how-the-route-group.md)
 - [SvelteKit のセッション管理](./sveltekit/session-management-in-sveltekit.md)
 - [SvelteKit のセッション管理（サーバーサイドセッション）](./sveltekit/sveltekit-session-management-jwt-cookie.md)
 - [SvelteKit のセッション管理（JWT）](./sveltekit/sveltekit-session-management-jwt.md)
