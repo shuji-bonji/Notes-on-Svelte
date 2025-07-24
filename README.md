@@ -8,6 +8,8 @@
 
 ### SvelteKit
 - [SvelteKit チュートリアル対応 TypeScript補完チートシート](./cheatsheet/typescript/typescript-sveltekit-tutorial-cheatsheet.md)
+- [SvelteKit チートシート（Basic）](./cheatsheet/typescript/basic-sveltekit-cheat-sheet-typescript-edition.md)
+<!-- - [SvelteKit チートシート（Advanced）](./cheatsheet/typescript/advanced-sveltekit-cheat-sheet-typescript-edition.md) -->
 
 ## チートシート
 ### Svelte
@@ -79,6 +81,7 @@
 - [仮想DOMとShadow DOMはなぜ重いのか？](./comparison/why-virtual-dom-and-shadow-dom-so-heavy.md)
 
 ### アーキテクチャ
+- [SvelteKitの SSR、SSG、prerender](./sveltekit/ssr-ssg-and-prerender.md)
 - [SPA vs SSR: 2025年のWebアーキテクチャトレンド](./sveltekit/spa-vs-ssr-trend-analysis.md)
 - [SPAとSSRの潮流と構成の選択肢](./sveltekit/spa-and-ssr-trends-and-configuration-options.md)
 - [PWA + SSR + SPA Web開発の新次元](./sveltekit/pwa+ssr+spa-a-new-dimension-in-web-development.md)
