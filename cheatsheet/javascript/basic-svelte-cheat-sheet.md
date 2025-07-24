@@ -133,7 +133,7 @@ Svelteファイル（.svelte）は以下の3つのセクションで構成され
 ```svelte
 <!-- Child.svelte -->
 <script>
-  const { name = "ゲスト", age = 20 } = $props();
+  let { name = "ゲスト", age = 20 } = $props();
 </script>
 ```
 
@@ -434,7 +434,7 @@ Svelteファイル（.svelte）は以下の3つのセクションで構成され
   let visible = true;
 </script>
 
-<button on:click={() => visible = !visible}>
+<button onclick={() => visible = !visible}>
   切り替え
 </button>
 

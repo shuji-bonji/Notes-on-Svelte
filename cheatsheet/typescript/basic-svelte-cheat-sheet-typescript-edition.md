@@ -495,7 +495,7 @@ useアクションは、要素がDOMにマウント（追加）されたとき�
   let visible = true;
 </script>
 
-<button on:click={() => (visible = !visible)}> 切り替え </button>
+<button onclick={() => (visible = !visible)}> 切り替え </button>
 
 {#key visible}
   <p transition:fade>

@@ -47,8 +47,8 @@
 
 ```svelte
 <script>
-  const map = $state(new Map());
-  const set = $state(new Set());
+  let map = $state(new Map());
+  let set = $state(new Set());
   
   // Mapへの追加はリアクティビティをトリガーする
   function addItem() {
@@ -382,7 +382,7 @@
   import { setContext } from 'svelte';
   import Child from './Child.svelte';
   
-  const theme = $state('light');
+  let theme = $state('light');
   
   // コンテキストの設定
   setContext('theme', {
@@ -519,12 +519,12 @@
 	{#if count > 4}
 		{@throw new Error('💣️')}
 	{/if}
-	<button on:click={() => count++}>
+	<button onclick={() => count++}>
 		{count}
 	</button>
 	{:catch error, reset}
 		<p>Error: {error.message}</p>
-		<button on:click={reset}>Reset</button>
+		<button onclick={reset}>Reset</button>
 	{/catch}
 </svelte:boundary>
 ```

@@ -143,7 +143,7 @@ export async function load({ fetch, depends }) {
   }
 </script>
 
-<button on:click={reloadUser}>ユーザー情報更新</button>
+<button onclick={reloadUser}>ユーザー情報更新</button>
 ```
 
 ## 使わなくてもいいケース（逆に不要な場合）

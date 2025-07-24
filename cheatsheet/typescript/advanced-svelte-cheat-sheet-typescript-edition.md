@@ -49,8 +49,8 @@
 
 ```svelte
 <script lang="ts">
-  const map = $state(new Map());
-  const set = $state(new Set());
+  let map = $state(new Map());
+  let set = $state(new Set());
 
   // Mapへの追加はリアクティビティをトリガーする
   function addItem() {

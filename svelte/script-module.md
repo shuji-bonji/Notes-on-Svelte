@@ -38,7 +38,7 @@ Svelte コンポーネントには、2種類の `<script>` ブロックが存在
   }
 </script>
 
-<button on:click={increment}>
+<button onclick={increment}>
   Count: {count}
 </button>
 ```

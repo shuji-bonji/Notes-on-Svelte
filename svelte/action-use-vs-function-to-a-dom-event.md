@@ -1,6 +1,6 @@
 # アクションの`use:`と、DOMイベントに関数を割り当てとの違い
 
-Svelteにおける `use:`（アクション）と、`on:event={functionName}` などで関数を割り当てるイベントハンドラとの主な違いは、引数に DOM 要素（node）を受け取るかどうかと、それに伴う用途や責任の違いにあります。
+Svelteにおける `use:`（アクション）と、`onevent={functionName}` などで関数を割り当てるイベントハンドラとの主な違いは、引数に DOM 要素（node）を受け取るかどうかと、それに伴う用途や責任の違いにあります。
 
 以下に、違いをわかりやすく比較します。
 
@@ -28,7 +28,7 @@ Svelteにおける `use:`（アクション）と、`on:event={functionName}` �
 <input use:autofocus>
 ```
 
-## 🧠 on:event={handler}（イベントハンドラ）
+## 🧠 onevent={handler}（イベントハンドラ）
 
 #### ✅ 特徴:
 - 関数の引数として渡されるのは、イベントオブジェクト（event）
@@ -42,13 +42,13 @@ Svelteにおける `use:`（アクション）と、`on:event={functionName}` �
   }
 </script>
 
-<button on:click={handleClick}>Click me</button>
+<button onclick={handleClick}>Click me</button>
 ```
 
 
 ## 📊 比較表
 
-|項目|use:action|on:event={handler}|
+|項目|use:action|onevent={handler}|
 |---|---|---|
 |呼び出しタイミング|要素が DOM にマウントされたとき|イベント発生時（クリック等）|
 |第1引数|DOMノード（node）|イベントオブジェクト（event）|
@@ -62,11 +62,11 @@ Svelteにおける `use:`（アクション）と、`on:event={functionName}` �
 |目的|選ぶべき手段|
 |---|---|
 |DOM ノードにアクセスしたい|✅ `use:`|
-|ユーザーの入力に応じて処理したい|✅ `on:click={...}` など|
+|ユーザーの入力に応じて処理したい|✅ `onclick={...}` など|
 
 
-## 🎓補足：on:click={() => handleClick(node)}としたい場合
+## 🎓補足：onclick={() => handleClick(node)}としたい場合
 
-通常、イベントハンドラにnodeを渡したい場合、アクションを使ってあらかじめDOMノードを渡しておき、内部状態として保持させるなどの工夫が必要です。Svelteのテンプレート上でon:の中でnodeを参照することはできません。
+通常、イベントハンドラにnodeを渡したい場合、アクションを使ってあらかじめDOMノードを渡しておき、内部状態として保持させるなどの工夫が必要です。Svelteのテンプレート上でoneventの中でnodeを参照することはできません。
 
 ## ご希望があれば、「アクションとイベントを組み合わせるパターン」もご紹介できます！

@@ -35,7 +35,7 @@ export async function load({ fetch, depends }) {
   }
 </script>
 
-<button on:click={reloadUser}>ユーザーを再取得</button>
+<button onclick={reloadUser}>ユーザーを再取得</button>
 ```
 
 
@@ -51,7 +51,7 @@ export async function load({ fetch, depends }) {
   }
 </script>
 
-<button on:click={reloadEverything}>ページ全体を再読み込み</button>
+<button onclick={reloadEverything}>ページ全体を再読み込み</button>
 ```
 
 ## 使い分けの指針

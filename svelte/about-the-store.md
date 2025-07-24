@@ -45,7 +45,7 @@ export const theme = writable('light');
 </script>
 
 <p>現在のテーマ: {$theme}</p>
-<button on:click={() => theme.set('dark')}>ダークモードに切替</button>
+<button onclick={() => theme.set('dark')}>ダークモードに切替</button>
 ```
 
 
@@ -89,8 +89,8 @@ export const counter = createCounter();
 
 ```svelte
 <p>{$counter}</p>
-<button on:click={counter.increment}>+1</button>
-<button on:click={counter.decrement}>-1</button>
+<button onclick={counter.increment}>+1</button>
+<button onclick={counter.decrement}>-1</button>
 ```
 
 

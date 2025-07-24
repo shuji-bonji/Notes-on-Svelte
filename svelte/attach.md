@@ -40,7 +40,7 @@
 </script>
 
 <input {@attach input} />
-<button on:click={focusInput}>Focus Input</button>
+<button onclick={focusInput}>Focus Input</button>
 ```
 
 ## bind:this との違いと比較
